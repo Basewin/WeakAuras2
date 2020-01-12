@@ -22,14 +22,17 @@ WeakAuras.table_to_string = function(tbl, depth)
       elseif type(v) == "function" then
         v = "function"
       elseif type(v) == "string" then
-        v = '"'.. v ..'"'
+        v = '"' .. v .. '"'
       end
 
       if type(k) == "string" then
-        k = '"' .. k ..'"'
+        k = '"' .. k .. '"'
       end
 
-      str = (str and str .. "|cff999999,|r " or "|cff999999{|r ") .. "|cffffff99[" .. tostring(k) .. "]|r |cff999999=|r |cffffffff" .. tostring(v) .. "|r"
+      str =
+        (str and str .. "|cff999999,|r " or "|cff999999{|r ") .. "|cffffff99[" .. tostring(
+          k
+        ) .. "]|r |cff999999=|r |cffffffff" .. tostring(v) .. "|r"
     end
   end
   return (str or "{ ") .. " }"
@@ -124,7 +127,13 @@ local function CreateProfilePopup()
     end
   end)
 
-  local scrollFrame = CreateFrame("ScrollFrame", "WADebugEditBoxScrollFrame", UIParent, "UIPanelScrollFrameTemplate")
+  local scrollFrame =
+    CreateFrame(
+      "ScrollFrame",
+      "WADebugEditBoxScrollFrame",
+      UIParent,
+      "UIPanelScrollFrameTemplate"
+    )
   scrollFrame:SetMovable(true)
   scrollFrame:SetFrameStrata("DIALOG")
   scrollFrame:SetSize(450, 300)
@@ -157,7 +166,12 @@ local function CreateProfilePopup()
     tile = true,
     tileSize = 32,
     edgeSize = 32,
-    insets = { left = 4, right = 4, top = 4, bottom = 4 }
+    insets = {
+      left = 4,
+      right = 4,
+      top = 4,
+      bottom = 4
+    }
   })
   bg:SetPoint("TOPLEFT", scrollFrame, -20, 20)
   bg:SetPoint("BOTTOMRIGHT", scrollFrame, 35, -25)
@@ -279,7 +293,8 @@ function WeakAuras.StopProfile()
 
   prettyPrint(L["Profiling stopped."])
 
-  profileData.systems.time.elapsed = debugprofilestop() - profileData.systems.time.start
+  profileData.systems.time.elapsed =
+    debugprofilestop() - profileData.systems.time.start
   profileData.systems.time.count = 0
 
   WeakAuras.StartProfileSystem = doNothing
@@ -304,7 +319,9 @@ local function PrintOneProfile(name, map, total)
   if total then
     percent = ", " .. string.format("%.2f", 100 * map.elapsed / total) .. "%"
   end
-  popup:AddText(string.format("%s |cff999999%.2fms%s|r", name, map.elapsed, percent))
+  popup:AddText(
+    string.format("%s |cff999999%.2fms%s|r", name, map.elapsed, percent)
+  )
 end
 
 local function SortProfileMap(map)
@@ -341,7 +358,12 @@ function WeakAuras.PrintProfile()
 
   PrintOneProfile("|cff9900ffTotal time:|r", profileData.systems.time)
   PrintOneProfile("|cff9900ffTime inside WA:|r", profileData.systems.wa)
-  popup:AddText(string.format("|cff9900ffTime spent inside WA:|r %.2f%%", 100 * profileData.systems.wa.elapsed / profileData.systems.time.elapsed))
+  popup:AddText(
+    string.format(
+      "|cff9900ffTime spent inside WA:|r %.2f%%",
+      100 * profileData.systems.wa.elapsed / profileData.systems.time.elapsed
+    )
+  )
   popup:AddText("")
   popup:AddText("|cff9900ffSystems:|r")
 
@@ -354,7 +376,7 @@ function WeakAuras.PrintProfile()
   popup:AddText("")
   popup:AddText("|cff9900ffAuras:|r")
   local total = TotalProfileTime(profileData.auras)
-  popup:AddText("Total time attributed to auras: ", floor(total) .."ms")
+  popup:AddText("Total time attributed to auras: ", floor(total) .. "ms")
   for i, k in ipairs(SortProfileMap(profileData.auras)) do
     PrintOneProfile(k, profileData.auras[k], total)
   end

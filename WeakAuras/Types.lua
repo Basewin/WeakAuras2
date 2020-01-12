@@ -1,15 +1,18 @@
 if not WeakAuras.IsCorrectVersion() then return end
 
-local WeakAuras = WeakAuras;
-local L = WeakAuras.L;
+local WeakAuras = WeakAuras
+local L = WeakAuras.L
 
-local LSM = LibStub("LibSharedMedia-3.0");
+local LSM = LibStub("LibSharedMedia-3.0")
 
 local wipe, tinsert = wipe, tinsert
-local GetNumShapeshiftForms, GetShapeshiftFormInfo = GetNumShapeshiftForms, GetShapeshiftFormInfo
-local GetNumSpecializationsForClassID, GetSpecializationInfoForClassID = GetNumSpecializationsForClassID, GetSpecializationInfoForClassID
+local GetNumShapeshiftForms, GetShapeshiftFormInfo =
+  GetNumShapeshiftForms,
+  GetShapeshiftFormInfo
+local GetNumSpecializationsForClassID, GetSpecializationInfoForClassID =
+  GetNumSpecializationsForClassID,
+  GetSpecializationInfoForClassID
 local WrapTextInColorCode, GetClassColor = WrapTextInColorCode, GetClassColor -- for Classic
-
 WeakAuras.glow_action_types = {
   show = L["Show"],
   hide = L["Hide"]
@@ -94,9 +97,7 @@ WeakAuras.trigger_require_types_one = {
   custom = L["Custom Function"]
 }
 
-WeakAuras.trigger_modes = {
-  ["first_active"] = -10,
-}
+WeakAuras.trigger_modes = { first_active = -10 }
 
 WeakAuras.debuff_types = {
   HELPFUL = L["Buff"],
@@ -163,7 +164,7 @@ WeakAuras.actual_unit_types_cast = {
   arena = L["Arena"],
   nameplate = L["Nameplate"],
   pet = L["Pet"],
-  member = L["Specific Unit"],
+  member = L["Specific Unit"]
 }
 
 WeakAuras.actual_unit_types = {
@@ -189,10 +190,10 @@ WeakAuras.unit_types_range_check = {
 
 WeakAuras.unit_threat_situation_types = {
   [-1] = L["Not On Threat Table"],
-  [0] = "|cFFB0B0B0"..L["Lower Than Tank"],
-  [1] = "|cFFFFFF77"..L["Higher Than Tank"],
-  [2] = "|cFFFF9900"..L["Tanking But Not Highest"],
-  [3] = "|cFFFF0000"..L["Tanking And Highest"]
+  [0] = "|cFFB0B0B0" .. L["Lower Than Tank"],
+  [1] = "|cFFFFFF77" .. L["Higher Than Tank"],
+  [2] = "|cFFFF9900" .. L["Tanking But Not Highest"],
+  [3] = "|cFFFF0000" .. L["Tanking And Highest"]
 }
 
 WeakAuras.class_types = {}
@@ -201,11 +202,20 @@ for classID = 1, 20 do -- 20 is for GetNumClasses() but that function doesn't ex
   local classInfo = C_CreatureInfo.GetClassInfo(classID)
   if classInfo then
     if WeakAuras.IsClassic() then
-      WeakAuras.class_types[classInfo.classFile] = WrapTextInColorCode(classInfo.className, select(4, GetClassColor(classInfo.classFile)))
-      WeakAuras.class_color_types[classInfo.classFile] = select(4, GetClassColor(classInfo.classFile))
+      WeakAuras.class_types[classInfo.classFile] =
+        WrapTextInColorCode(
+          classInfo.className,
+          select(4, GetClassColor(classInfo.classFile))
+        )
+      WeakAuras.class_color_types[classInfo.classFile] =
+        select(4, GetClassColor(classInfo.classFile))
     else
-      WeakAuras.class_types[classInfo.classFile] = C_ClassColor.GetClassColor(classInfo.classFile):WrapTextInColorCode(classInfo.className)
-      WeakAuras.class_color_types[classInfo.classFile] = C_ClassColor.GetClassColor(classInfo.classFile):GenerateHexColorMarkup()
+      WeakAuras.class_types[classInfo.classFile] =
+        C_ClassColor.GetClassColor(classInfo.classFile):WrapTextInColorCode(
+          classInfo.className
+        )
+      WeakAuras.class_color_types[classInfo.classFile] =
+        C_ClassColor.GetClassColor(classInfo.classFile):GenerateHexColorMarkup()
     end
   end
 end
@@ -244,24 +254,24 @@ WeakAuras.faction_group = {
   Neutral = L["Neutral"]
 }
 
-WeakAuras.form_types = {};
+WeakAuras.form_types = {}
 local function update_forms()
-  wipe(WeakAuras.form_types);
-  WeakAuras.form_types[0] = "0 - "..L["Humanoid"]
+  wipe(WeakAuras.form_types)
+  WeakAuras.form_types[0] = "0 - " .. L["Humanoid"]
   for i = 1, GetNumShapeshiftForms() do
-    local _, _, _, id = GetShapeshiftFormInfo(i);
-    if(id) then
-      local name = GetSpellInfo(id);
-      if(name) then
-        WeakAuras.form_types[i] = i.." - "..name
+    local _, _, _, id = GetShapeshiftFormInfo(i)
+    if id then
+      local name = GetSpellInfo(id)
+      if name then
+        WeakAuras.form_types[i] = i .. " - " .. name
       end
     end
   end
 end
-local form_frame = CreateFrame("frame");
+local form_frame = CreateFrame("frame")
 form_frame:RegisterEvent("UPDATE_SHAPESHIFT_FORMS")
 form_frame:RegisterEvent("PLAYER_LOGIN")
-form_frame:SetScript("OnEvent", update_forms);
+form_frame:SetScript("OnEvent", update_forms)
 
 WeakAuras.blend_types = {
   ADD = L["Glow"],
@@ -318,7 +328,7 @@ WeakAuras.aurabar_anchor_areas = {
   icon = L["Icon"],
   fg = L["Foreground"],
   bg = L["Background"],
-  bar = L["Bar"],
+  bar = L["Bar"]
 }
 
 WeakAuras.inverse_point_types = {
@@ -338,7 +348,7 @@ WeakAuras.anchor_frame_types = {
   PRD = L["Personal Resource Display"],
   MOUSE = L["Mouse Cursor"],
   SELECTFRAME = L["Select Frame"],
-  CUSTOM = WeakAuras.newFeatureString..L["Custom"]
+  CUSTOM = WeakAuras.newFeatureString .. L["Custom"]
 }
 
 WeakAuras.anchor_frame_types_dynamicgroup = {
@@ -346,9 +356,9 @@ WeakAuras.anchor_frame_types_dynamicgroup = {
   PRD = L["Personal Resource Display"],
   MOUSE = L["Mouse Cursor"],
   SELECTFRAME = L["Select Frame"],
-  NAMEPLATE = WeakAuras.newFeatureString..L["Nameplates"],
-  UNITFRAME = WeakAuras.newFeatureString..L["Unit Frames"],
-  CUSTOM = WeakAuras.newFeatureString..L["Custom"]
+  NAMEPLATE = WeakAuras.newFeatureString .. L["Nameplates"],
+  UNITFRAME = WeakAuras.newFeatureString .. L["Unit Frames"],
+  CUSTOM = WeakAuras.newFeatureString .. L["Custom"]
 }
 
 WeakAuras.spark_rotation_types = {
@@ -358,9 +368,9 @@ WeakAuras.spark_rotation_types = {
 
 WeakAuras.spark_hide_types = {
   NEVER = L["Never"],
-  FULL  = L["Full"],
+  FULL = L["Full"],
   EMPTY = L["Empty"],
-  BOTH  = L["Full/Empty"]
+  BOTH = L["Full/Empty"]
 }
 
 WeakAuras.containment_types = {
@@ -372,7 +382,7 @@ WeakAuras.font_flags = {
   None = L["None"],
   MONOCHROME = L["Monochrome"],
   OUTLINE = L["Outline"],
-  THICKOUTLINE  = L["Thick Outline"],
+  THICKOUTLINE = L["Thick Outline"],
   ["MONOCHROME|OUTLINE"] = L["Monochrome Outline"],
   ["MONOCHROME|THICKOUTLINE"] = L["Monochrome Thick Outline"]
 }
@@ -387,17 +397,17 @@ WeakAuras.text_word_wrap = {
   Elide = L["Elide"]
 }
 
-WeakAuras.event_types = {};
+WeakAuras.event_types = {}
 for name, prototype in pairs(WeakAuras.event_prototypes) do
-  if(prototype.type == "event") then
-    WeakAuras.event_types[name] = prototype.name;
+  if (prototype.type == "event") then
+    WeakAuras.event_types[name] = prototype.name
   end
 end
 
-WeakAuras.status_types = {};
+WeakAuras.status_types = {}
 for name, prototype in pairs(WeakAuras.event_prototypes) do
-  if(prototype.type == "status") then
-    WeakAuras.status_types[name] = prototype.name;
+  if (prototype.type == "status") then
+    WeakAuras.status_types[name] = prototype.name
   end
 end
 
@@ -564,21 +574,21 @@ WeakAuras.orientation_with_circle_types = {
 }
 
 WeakAuras.spec_types = {
-  [1] = SPECIALIZATION.." 1",
-  [2] = SPECIALIZATION.." 2",
-  [3] = SPECIALIZATION.." 3",
-  [4] = SPECIALIZATION.." 4"
+  [1] = SPECIALIZATION .. " 1",
+  [2] = SPECIALIZATION .. " 2",
+  [3] = SPECIALIZATION .. " 3",
+  [4] = SPECIALIZATION .. " 4"
 }
 
 WeakAuras.spec_types_3 = {
-  [1] = SPECIALIZATION.." 1",
-  [2] = SPECIALIZATION.." 2",
-  [3] = SPECIALIZATION.." 3"
+  [1] = SPECIALIZATION .. " 1",
+  [2] = SPECIALIZATION .. " 2",
+  [3] = SPECIALIZATION .. " 3"
 }
 
 WeakAuras.spec_types_2 = {
-  [1] = SPECIALIZATION.." 1",
-  [2] = SPECIALIZATION.." 2"
+  [1] = SPECIALIZATION .. " 1",
+  [2] = SPECIALIZATION .. " 2"
 }
 
 WeakAuras.spec_types_specific = {}
@@ -588,31 +598,35 @@ local function update_specs()
     WeakAuras.spec_types_specific[classFileName] = {}
     local classTexcoords = CLASS_ICON_TCOORDS[classFileName]
     local numSpecs = GetNumSpecializationsForClassID(classID)
-    for i=1, numSpecs do
-      local specId, tabName, _, icon = GetSpecializationInfoForClassID(classID, i);
+    for i = 1, numSpecs do
+      local specId, tabName, _, icon =
+        GetSpecializationInfoForClassID(classID, i)
       if tabName then
-        tinsert(WeakAuras.spec_types_specific[classFileName], "|T"..(icon or "error")..":0|t "..(tabName or "error"));
-        WeakAuras.spec_types_all[specId] = "|TInterface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES:0:0:0:0:256:256:"
-         .. classTexcoords[1] * 256 .. ":" .. classTexcoords[2] * 256 .. ":" .. classTexcoords[3] * 256 .. ":" .. classTexcoords[4] * 256
-         .. ":0|t"
-         .. "|T"..(icon or "error")..":0|t "..(tabName or "error");
+        tinsert(
+          WeakAuras.spec_types_specific[classFileName],
+          "|T" .. (icon or "error") .. ":0|t " .. (tabName or "error")
+        )
+        WeakAuras.spec_types_all[specId] =
+          "|TInterface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES:0:0:0:0:256:256:" .. classTexcoords[1] * 256 .. ":" .. classTexcoords[2] * 256 .. ":" .. classTexcoords[3] * 256 .. ":" .. classTexcoords[4] * 256 .. ":0|t" .. "|T" .. (icon or "error") .. ":0|t " .. (tabName or "error")
       end
     end
   end
 end
 
-
 WeakAuras.talent_types = {}
 if not WeakAuras.IsClassic() then
-  local spec_frame = CreateFrame("frame");
+  local spec_frame = CreateFrame("frame")
   spec_frame:RegisterEvent("PLAYER_LOGIN")
-  spec_frame:SetScript("OnEvent", update_specs);
-  local numTalents, numTiers, numColumns = MAX_TALENT_TIERS * NUM_TALENT_COLUMNS, MAX_TALENT_TIERS, NUM_TALENT_COLUMNS
+  spec_frame:SetScript("OnEvent", update_specs)
+  local numTalents, numTiers, numColumns =
+    MAX_TALENT_TIERS * NUM_TALENT_COLUMNS,
+    MAX_TALENT_TIERS,
+    NUM_TALENT_COLUMNS
   local talentId, tier, column = 1, 1, 1
   while talentId <= numTalents do
     while tier <= numTiers do
       while column <= numColumns do
-        WeakAuras.talent_types[talentId] = L["Tier "]..tier.." - "..column
+        WeakAuras.talent_types[talentId] = L["Tier "] .. tier .. " - " .. column
         column = column + 1
         talentId = talentId + 1
       end
@@ -624,114 +638,115 @@ if not WeakAuras.IsClassic() then
 else
   for tab = 1, 5 do
     for num_talent = 1, 20 do
-      local talentId = (tab - 1)*20+num_talent
-      WeakAuras.talent_types[talentId] = L["Tab "]..tab.." - "..num_talent
+      local talentId = (tab - 1) * 20 + num_talent
+      WeakAuras.talent_types[talentId] = L["Tab "] .. tab .. " - " .. num_talent
     end
   end
 end
 
 if not WeakAuras.IsClassic() then
-  WeakAuras.pvp_talent_types = {
-    select(2, GetPvpTalentInfoByID(3589)),
-    select(2, GetPvpTalentInfoByID(3588)),
-    select(2, GetPvpTalentInfoByID(3587)),
-    nil
-  };
-  for i = 1,10 do
-    tinsert(WeakAuras.pvp_talent_types, string.format(L["PvP Talent %i"], i));
+  WeakAuras.pvp_talent_types =
+    {
+      select(2, GetPvpTalentInfoByID(3589)),
+      select(2, GetPvpTalentInfoByID(3588)),
+      select(2, GetPvpTalentInfoByID(3587)),
+      nil
+    }
+  for i = 1, 10 do
+    tinsert(WeakAuras.pvp_talent_types, string.format(L["PvP Talent %i"], i))
   end
 else
   WeakAuras.pvp_talent_types = {}
 end
 
 -- GetTotemInfo() only works for the first 5 totems
-WeakAuras.totem_types = {};
-local totemString = L["Totem #%i"];
+WeakAuras.totem_types = {}
+local totemString = L["Totem #%i"]
 for i = 1, 5 do
-  WeakAuras.totem_types[i] = totemString:format(i);
+  WeakAuras.totem_types[i] = totemString:format(i)
 end
 
 WeakAuras.texture_types = {
   ["Blizzard Alerts"] = {
-    ["1027131"]	= "Arcane Missiles 1",
-    ["1027132"]	= "Arcane Missiles 2",
-    ["1027133"]	= "Arcane Missiles 3",
-    ["450913"] 	= "Art of War",
-    ["801266"] 	= "Backlash_Green",
-    ["460830"] 	= "Backslash",
-    ["1030393"]	= "Bandits Guile",
-    ["510822"] 	= "Berserk",
-    ["511104"] 	= "Blood Boil",
-    ["449487"] 	= "Blood Surge",
-    ["449488"] 	= "Brain Freeze",
-    ["603338"] 	= "Dark Tiger",
-    ["461878"] 	= "Dark Transformation",
-    ["459313"] 	= "Daybreak",
-    ["511469"] 	= "Denounce",
-    ["1057288"]	= "Echo of the Elements",
-    ["450914"] 	= "Eclipse Moon",
-    ["450915"] 	= "Eclipse Sun",
-    ["450916"] 	= "Focus Fire",
-    ["449489"] 	= "Frozen Fingers",
-    ["467696"] 	= "Fulmination",
-    ["460831"] 	= "Fury of Stormrage",
-    ["450917"] 	= "Generic Arc 1",
-    ["450918"] 	= "Generic Arc 2",
-    ["450919"] 	= "Generic Arc 3",
-    ["450920"] 	= "Generic Arc 4",
-    ["450921"] 	= "Generic Arc 5",
-    ["450922"] 	= "Generic Arc 6",
-    ["450923"] 	= "Generic Top 1",
-    ["450924"] 	= "Generic Top 2",
-    ["450925"] 	= "Grand Crusader",
-    ["459314"] 	= "Hand of Light",
-    ["449490"] 	= "Hot Streak",
-    ["801267"] 	= "Imp Empowerment Green",
-    ["449491"] 	= "Imp Empowerment",
-    ["457658"] 	= "Impact",
-    ["458740"] 	= "Killing Machine",
-    ["450926"] 	= "Lock and Load",
-    ["1028136"]	= "Maelstrom Weapon 1",
-    ["1028137"]	= "Maelstrom Weapon 2",
-    ["1028138"]	= "Maelstrom Weapon 3",
-    ["1028139"]	= "Maelstrom Weapon 4",
-    ["450927"] 	= "Maelstrom Weapon",
-    ["450928"] 	= "Master Marksman",
-    ["801268"] 	= "Molten Core Green",
-    ["458741"] 	= "Molten Core",
-    ["1001511"]	= "Monk Blackout Kick",
-    ["1028091"]	= "Monk Ox 2",
-    ["1028092"]	= "Monk Ox 3",
-    ["623950"] 	= "Monk Ox",
-    ["623951"] 	= "Monk Serpent",
-    ["1001512"]	= "Monk Tiger Palm",
-    ["623952"] 	= "Monk Tiger",
-    ["450929"] 	= "Nature's Grace",
-    ["511105"] 	= "Necropolis",
-    ["449492"] 	= "Nightfall",
-    ["510823"] 	= "Omen of Clarity (Feral)",
-    ["898423"] 	= "Predatory Swiftness",
-    ["962497"] 	= "Raging Blow",
-    ["450930"] 	= "Rime",
-    ["469752"] 	= "Serendipity",
-    ["656728"] 	= "Shadow Word Insanity",
-    ["627609"] 	= "Shadow of Death",
-    ["463452"] 	= "Shooting Stars",
-    ["450931"] 	= "Slice and Dice",
-    ["424570"] 	= "Spell Activation Overlay 0",
-    ["449493"] 	= "Sudden Death",
-    ["450932"] 	= "Sudden Doom",
-    ["592058"] 	= "Surge of Darkness",
-    ["450933"] 	= "Surge of Light",
-    ["449494"] 	= "Sword and Board",
-    ["1029138"]	= "Thrill of the Hunt 1",
-    ["1029139"]	= "Thrill of the Hunt 2",
-    ["1029140"]	= "Thrill of the Hunt 3",
-    ["774420"] 	= "Tooth and Claw",
-    ["627610"] 	= "Ultimatum",
-    ["603339"] 	= "White Tiger",
+    ["1027131"] = "Arcane Missiles 1",
+    ["1027132"] = "Arcane Missiles 2",
+    ["1027133"] = "Arcane Missiles 3",
+    ["450913"] = "Art of War",
+    ["801266"] = "Backlash_Green",
+    ["460830"] = "Backslash",
+    ["1030393"] = "Bandits Guile",
+    ["510822"] = "Berserk",
+    ["511104"] = "Blood Boil",
+    ["449487"] = "Blood Surge",
+    ["449488"] = "Brain Freeze",
+    ["603338"] = "Dark Tiger",
+    ["461878"] = "Dark Transformation",
+    ["459313"] = "Daybreak",
+    ["511469"] = "Denounce",
+    ["1057288"] = "Echo of the Elements",
+    ["450914"] = "Eclipse Moon",
+    ["450915"] = "Eclipse Sun",
+    ["450916"] = "Focus Fire",
+    ["449489"] = "Frozen Fingers",
+    ["467696"] = "Fulmination",
+    ["460831"] = "Fury of Stormrage",
+    ["450917"] = "Generic Arc 1",
+    ["450918"] = "Generic Arc 2",
+    ["450919"] = "Generic Arc 3",
+    ["450920"] = "Generic Arc 4",
+    ["450921"] = "Generic Arc 5",
+    ["450922"] = "Generic Arc 6",
+    ["450923"] = "Generic Top 1",
+    ["450924"] = "Generic Top 2",
+    ["450925"] = "Grand Crusader",
+    ["459314"] = "Hand of Light",
+    ["449490"] = "Hot Streak",
+    ["801267"] = "Imp Empowerment Green",
+    ["449491"] = "Imp Empowerment",
+    ["457658"] = "Impact",
+    ["458740"] = "Killing Machine",
+    ["450926"] = "Lock and Load",
+    ["1028136"] = "Maelstrom Weapon 1",
+    ["1028137"] = "Maelstrom Weapon 2",
+    ["1028138"] = "Maelstrom Weapon 3",
+    ["1028139"] = "Maelstrom Weapon 4",
+    ["450927"] = "Maelstrom Weapon",
+    ["450928"] = "Master Marksman",
+    ["801268"] = "Molten Core Green",
+    ["458741"] = "Molten Core",
+    ["1001511"] = "Monk Blackout Kick",
+    ["1028091"] = "Monk Ox 2",
+    ["1028092"] = "Monk Ox 3",
+    ["623950"] = "Monk Ox",
+    ["623951"] = "Monk Serpent",
+    ["1001512"] = "Monk Tiger Palm",
+    ["623952"] = "Monk Tiger",
+    ["450929"] = "Nature's Grace",
+    ["511105"] = "Necropolis",
+    ["449492"] = "Nightfall",
+    ["510823"] = "Omen of Clarity (Feral)",
+    ["898423"] = "Predatory Swiftness",
+    ["962497"] = "Raging Blow",
+    ["450930"] = "Rime",
+    ["469752"] = "Serendipity",
+    ["656728"] = "Shadow Word Insanity",
+    ["627609"] = "Shadow of Death",
+    ["463452"] = "Shooting Stars",
+    ["450931"] = "Slice and Dice",
+    ["424570"] = "Spell Activation Overlay 0",
+    ["449493"] = "Sudden Death",
+    ["450932"] = "Sudden Doom",
+    ["592058"] = "Surge of Darkness",
+    ["450933"] = "Surge of Light",
+    ["449494"] = "Sword and Board",
+    ["1029138"] = "Thrill of the Hunt 1",
+    ["1029139"] = "Thrill of the Hunt 2",
+    ["1029140"] = "Thrill of the Hunt 3",
+    ["774420"] = "Tooth and Claw",
+    ["627610"] = "Ultimatum",
+    ["603339"] = "White Tiger"
   },
-  ["Icons"] = {
+  Icons = {
     ["166662"] = "Shield",
     ["165558"] = "Paw",
     ["166989"] = "Stun Whirl",
@@ -766,10 +781,9 @@ WeakAuras.texture_types = {
     ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\exclamation-mark.tga"] = "Exclamation Mark",
     ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\eyes.tga"] = "Eyes",
     ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\ok-icon.tga"] = "Ok Icon",
-    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\targeting-mark.tga"] = "Targeting Mark",
-
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\targeting-mark.tga"] = "Targeting Mark"
   },
-  ["Runes"] = {
+  Runes = {
     ["165630"] = "Ringed Aura Rune",
     ["166341"] = "Holy Cross Rune",
     ["166757"] = "Circular Frost Rune",
@@ -795,7 +809,7 @@ WeakAuras.texture_types = {
     ["165640"] = "Oblong Aura Rune",
     ["166748"] = "Filled Circular Rune",
     ["166754"] = "Light BC Rune",
-    ["166979"] = "Star Rune",
+    ["166979"] = "Star Rune"
   },
   ["PvP Emblems"] = {
     ["Interface\\PVPFrame\\PVP-Banner-Emblem-1"] = "Wheelchair",
@@ -906,7 +920,7 @@ WeakAuras.texture_types = {
     ["Interface\\PVPFrame\\Icons\\PVP-Banner-Emblem-100"] = "Frightened Cat",
     ["Interface\\PVPFrame\\Icons\\PVP-Banner-Emblem-101"] = "Eagle Face"
   },
-  ["Beams"] = {
+  Beams = {
     ["186198"] = "Lightning",
     ["186187"] = "Red Drops Beam",
     ["167096"] = "Gold Chain",
@@ -939,9 +953,9 @@ WeakAuras.texture_types = {
     ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\rainbowbar"] = "Rainbow Bar",
     ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\StripedTexture"] = "Striped Bar",
     ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\stripe-bar.tga"] = "Striped Bar 2",
-    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\stripe-rainbow-bar.tga"] = "Rainbow Bar 2",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\stripe-rainbow-bar.tga"] = "Rainbow Bar 2"
   },
-  ["Shapes"] = {
+  Shapes = {
     ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\Circle_Smooth"] = "Smooth Circle",
     ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\Circle_Smooth_Border"] = "Smooth Circle with Border",
     ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\Circle_Squirrel"] = "Spiralled Circle",
@@ -965,202 +979,225 @@ WeakAuras.texture_types = {
     ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\square_mini.tga"] = "Small Square",
     ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\target_indicator.tga"] = "Target Indicator",
     ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\target_indicator_glow.tga"] = "Target Indicator Glow",
-    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\arrows_target.tga"] = "Arrows Target",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\arrows_target.tga"] = "Arrows Target"
   },
-  ["Sparks"] = {
+  Sparks = {
     ["130877"] = "Blizzard Spark",
     ["Insanity-Spark"] = "Blizzard Insanity Spark",
     ["XPBarAnim-OrangeSpark"] = "Blizzard XPBar Spark",
     ["GarrMission_EncounterBar-Spark"] = "Blizzard Garrison Mission Encounter Spark",
-    ["Legionfall_BarSpark"]= "Blizzard Legionfall Spark",
+    Legionfall_BarSpark = "Blizzard Legionfall Spark",
     ["honorsystem-bar-spark"] = "Blizzard Honor System Spark",
     ["bonusobjectives-bar-spark"] = "Bonus Objectives Spark"
   }
 }
 local BuildInfo = select(4, GetBuildInfo())
 if BuildInfo <= 80100 then -- 8.1.5
-  WeakAuras.texture_types.Sparks["worldstate-capturebar-spark-green"] = "Capture Bar Green Spark"
-  WeakAuras.texture_types.Sparks["worldstate-capturebar-spark-yellow"] = "Capture Bar Yellow Spark"
+  WeakAuras.texture_types.Sparks["worldstate-capturebar-spark-green"] =
+    "Capture Bar Green Spark"
+  WeakAuras.texture_types.Sparks["worldstate-capturebar-spark-yellow"] =
+    "Capture Bar Yellow Spark"
 end
 if WeakAuras.IsClassic() then -- Classic
   WeakAuras.texture_types["Blizzard Alerts"] = nil
   do
     local beams = WeakAuras.texture_types["Beams"]
-    local beams_ids = {167096, 167097, 167098, 167099, 167100, 167101, 167102, 167103, 167104, 167105, 186192, 186193, 186194, 241098, 241099, 369749, 369750}
+    local beams_ids =
+      {
+        167096,
+        167097,
+        167098,
+        167099,
+        167100,
+        167101,
+        167102,
+        167103,
+        167104,
+        167105,
+        186192,
+        186193,
+        186194,
+        241098,
+        241099,
+        369749,
+        369750
+      }
     for _, v in ipairs(beams_ids) do
       beams[tostring(v)] = nil
     end
   end
   do
     local icons = WeakAuras.texture_types["Icons"]
-    local icons_ids = {165605, 166036, 166680, 166948, 166989, 240925, 240961, 240972, 241049}
+    local icons_ids =
+      { 165605, 166036, 166680, 166948, 166989, 240925, 240961, 240972, 241049 }
     for _, v in ipairs(icons_ids) do
       icons[tostring(v)] = nil
     end
   end
   do
     local runes = WeakAuras.texture_types["Runes"]
-    local runes_ids = {165633, 165885, 165922, 166340, 166753, 166754, 241003, 241004, 241005}
+    local runes_ids =
+      { 165633, 165885, 165922, 166340, 166753, 166754, 241003, 241004, 241005 }
     for _, v in ipairs(runes_ids) do
       runes[tostring(v)] = nil
     end
   end
 end
 
-if(WeakAuras.PowerAurasPath ~= "") then
+if (WeakAuras.PowerAurasPath ~= "") then
   WeakAuras.texture_types["PowerAuras Heads-Up"] = {
-    [WeakAuras.PowerAurasPath.."Aura1"] = "Runed Text",
-    [WeakAuras.PowerAurasPath.."Aura2"] = "Runed Text On Ring",
-    [WeakAuras.PowerAurasPath.."Aura3"] = "Power Waves",
-    [WeakAuras.PowerAurasPath.."Aura4"] = "Majesty",
-    [WeakAuras.PowerAurasPath.."Aura5"] = "Runed Ends",
-    [WeakAuras.PowerAurasPath.."Aura6"] = "Extra Majesty",
-    [WeakAuras.PowerAurasPath.."Aura7"] = "Triangular Highlights",
-    [WeakAuras.PowerAurasPath.."Aura11"] = "Oblong Highlights",
-    [WeakAuras.PowerAurasPath.."Aura16"] = "Thin Crescents",
-    [WeakAuras.PowerAurasPath.."Aura17"] = "Crescent Highlights",
-    [WeakAuras.PowerAurasPath.."Aura18"] = "Dense Runed Text",
-    [WeakAuras.PowerAurasPath.."Aura23"] = "Runed Spiked Ring",
-    [WeakAuras.PowerAurasPath.."Aura24"] = "Smoke",
-    [WeakAuras.PowerAurasPath.."Aura28"] = "Flourished Text",
-    [WeakAuras.PowerAurasPath.."Aura33"] = "Droplet Highlights"
+    [WeakAuras.PowerAurasPath .. "Aura1"] = "Runed Text",
+    [WeakAuras.PowerAurasPath .. "Aura2"] = "Runed Text On Ring",
+    [WeakAuras.PowerAurasPath .. "Aura3"] = "Power Waves",
+    [WeakAuras.PowerAurasPath .. "Aura4"] = "Majesty",
+    [WeakAuras.PowerAurasPath .. "Aura5"] = "Runed Ends",
+    [WeakAuras.PowerAurasPath .. "Aura6"] = "Extra Majesty",
+    [WeakAuras.PowerAurasPath .. "Aura7"] = "Triangular Highlights",
+    [WeakAuras.PowerAurasPath .. "Aura11"] = "Oblong Highlights",
+    [WeakAuras.PowerAurasPath .. "Aura16"] = "Thin Crescents",
+    [WeakAuras.PowerAurasPath .. "Aura17"] = "Crescent Highlights",
+    [WeakAuras.PowerAurasPath .. "Aura18"] = "Dense Runed Text",
+    [WeakAuras.PowerAurasPath .. "Aura23"] = "Runed Spiked Ring",
+    [WeakAuras.PowerAurasPath .. "Aura24"] = "Smoke",
+    [WeakAuras.PowerAurasPath .. "Aura28"] = "Flourished Text",
+    [WeakAuras.PowerAurasPath .. "Aura33"] = "Droplet Highlights"
   }
   WeakAuras.texture_types["PowerAuras Icons"] = {
-    [WeakAuras.PowerAurasPath.."Aura8"] = "Rune",
-    [WeakAuras.PowerAurasPath.."Aura9"] = "Stylized Ghost",
-    [WeakAuras.PowerAurasPath.."Aura10"] = "Skull and Crossbones",
-    [WeakAuras.PowerAurasPath.."Aura12"] = "Snowflake",
-    [WeakAuras.PowerAurasPath.."Aura13"] = "Flame",
-    [WeakAuras.PowerAurasPath.."Aura14"] = "Holy Rune",
-    [WeakAuras.PowerAurasPath.."Aura15"] = "Zig-Zag Exclamation Point",
-    [WeakAuras.PowerAurasPath.."Aura19"] = "Crossed Swords",
-    [WeakAuras.PowerAurasPath.."Aura21"] = "Shield",
-    [WeakAuras.PowerAurasPath.."Aura22"] = "Glow",
-    [WeakAuras.PowerAurasPath.."Aura25"] = "Cross",
-    [WeakAuras.PowerAurasPath.."Aura26"] = "Droplet",
-    [WeakAuras.PowerAurasPath.."Aura27"] = "Alert",
-    [WeakAuras.PowerAurasPath.."Aura29"] = "Paw",
-    [WeakAuras.PowerAurasPath.."Aura30"] = "Bull",
+    [WeakAuras.PowerAurasPath .. "Aura8"] = "Rune",
+    [WeakAuras.PowerAurasPath .. "Aura9"] = "Stylized Ghost",
+    [WeakAuras.PowerAurasPath .. "Aura10"] = "Skull and Crossbones",
+    [WeakAuras.PowerAurasPath .. "Aura12"] = "Snowflake",
+    [WeakAuras.PowerAurasPath .. "Aura13"] = "Flame",
+    [WeakAuras.PowerAurasPath .. "Aura14"] = "Holy Rune",
+    [WeakAuras.PowerAurasPath .. "Aura15"] = "Zig-Zag Exclamation Point",
+    [WeakAuras.PowerAurasPath .. "Aura19"] = "Crossed Swords",
+    [WeakAuras.PowerAurasPath .. "Aura21"] = "Shield",
+    [WeakAuras.PowerAurasPath .. "Aura22"] = "Glow",
+    [WeakAuras.PowerAurasPath .. "Aura25"] = "Cross",
+    [WeakAuras.PowerAurasPath .. "Aura26"] = "Droplet",
+    [WeakAuras.PowerAurasPath .. "Aura27"] = "Alert",
+    [WeakAuras.PowerAurasPath .. "Aura29"] = "Paw",
+    [WeakAuras.PowerAurasPath .. "Aura30"] = "Bull",
     --   [WeakAuras.PowerAurasPath.."Aura31"] = "Heiroglyphics Horizontal",
-    [WeakAuras.PowerAurasPath.."Aura32"] = "Heiroglyphics",
-    [WeakAuras.PowerAurasPath.."Aura34"] = "Circled Arrow",
-    [WeakAuras.PowerAurasPath.."Aura35"] = "Short Sword",
+    [WeakAuras.PowerAurasPath .. "Aura32"] = "Heiroglyphics",
+    [WeakAuras.PowerAurasPath .. "Aura34"] = "Circled Arrow",
+    [WeakAuras.PowerAurasPath .. "Aura35"] = "Short Sword",
     --   [WeakAuras.PowerAurasPath.."Aura36"] = "Short Sword Horizontal",
-    [WeakAuras.PowerAurasPath.."Aura45"] = "Circular Glow",
-    [WeakAuras.PowerAurasPath.."Aura48"] = "Totem",
-    [WeakAuras.PowerAurasPath.."Aura49"] = "Dragon Blade",
-    [WeakAuras.PowerAurasPath.."Aura50"] = "Ornate Design",
-    [WeakAuras.PowerAurasPath.."Aura51"] = "Inverted Holy Rune",
-    [WeakAuras.PowerAurasPath.."Aura52"] = "Stylized Skull",
-    [WeakAuras.PowerAurasPath.."Aura53"] = "Exclamation Point",
-    [WeakAuras.PowerAurasPath.."Aura54"] = "Nonagon",
-    [WeakAuras.PowerAurasPath.."Aura68"] = "Wings",
-    [WeakAuras.PowerAurasPath.."Aura69"] = "Rectangle",
-    [WeakAuras.PowerAurasPath.."Aura70"] = "Low Mana",
-    [WeakAuras.PowerAurasPath.."Aura71"] = "Ghostly Eye",
-    [WeakAuras.PowerAurasPath.."Aura72"] = "Circle",
-    [WeakAuras.PowerAurasPath.."Aura73"] = "Ring",
-    [WeakAuras.PowerAurasPath.."Aura74"] = "Square",
-    [WeakAuras.PowerAurasPath.."Aura75"] = "Square Brackets",
-    [WeakAuras.PowerAurasPath.."Aura76"] = "Bob-omb",
-    [WeakAuras.PowerAurasPath.."Aura77"] = "Goldfish",
-    [WeakAuras.PowerAurasPath.."Aura78"] = "Check",
-    [WeakAuras.PowerAurasPath.."Aura79"] = "Ghostly Face",
-    [WeakAuras.PowerAurasPath.."Aura84"] = "Overlapping Boxes",
+    [WeakAuras.PowerAurasPath .. "Aura45"] = "Circular Glow",
+    [WeakAuras.PowerAurasPath .. "Aura48"] = "Totem",
+    [WeakAuras.PowerAurasPath .. "Aura49"] = "Dragon Blade",
+    [WeakAuras.PowerAurasPath .. "Aura50"] = "Ornate Design",
+    [WeakAuras.PowerAurasPath .. "Aura51"] = "Inverted Holy Rune",
+    [WeakAuras.PowerAurasPath .. "Aura52"] = "Stylized Skull",
+    [WeakAuras.PowerAurasPath .. "Aura53"] = "Exclamation Point",
+    [WeakAuras.PowerAurasPath .. "Aura54"] = "Nonagon",
+    [WeakAuras.PowerAurasPath .. "Aura68"] = "Wings",
+    [WeakAuras.PowerAurasPath .. "Aura69"] = "Rectangle",
+    [WeakAuras.PowerAurasPath .. "Aura70"] = "Low Mana",
+    [WeakAuras.PowerAurasPath .. "Aura71"] = "Ghostly Eye",
+    [WeakAuras.PowerAurasPath .. "Aura72"] = "Circle",
+    [WeakAuras.PowerAurasPath .. "Aura73"] = "Ring",
+    [WeakAuras.PowerAurasPath .. "Aura74"] = "Square",
+    [WeakAuras.PowerAurasPath .. "Aura75"] = "Square Brackets",
+    [WeakAuras.PowerAurasPath .. "Aura76"] = "Bob-omb",
+    [WeakAuras.PowerAurasPath .. "Aura77"] = "Goldfish",
+    [WeakAuras.PowerAurasPath .. "Aura78"] = "Check",
+    [WeakAuras.PowerAurasPath .. "Aura79"] = "Ghostly Face",
+    [WeakAuras.PowerAurasPath .. "Aura84"] = "Overlapping Boxes",
     --   [WeakAuras.PowerAurasPath.."Aura85"] = "Overlapping Boxes 45°",
     --   [WeakAuras.PowerAurasPath.."Aura86"] = "Overlapping Boxes 270°",
-    [WeakAuras.PowerAurasPath.."Aura87"] = "Fairy",
-    [WeakAuras.PowerAurasPath.."Aura88"] = "Comet",
-    [WeakAuras.PowerAurasPath.."Aura95"] = "Dual Spiral",
-    [WeakAuras.PowerAurasPath.."Aura96"] = "Japanese Character",
-    [WeakAuras.PowerAurasPath.."Aura97"] = "Japanese Character",
-    [WeakAuras.PowerAurasPath.."Aura98"] = "Japanese Character",
-    [WeakAuras.PowerAurasPath.."Aura99"] = "Japanese Character",
-    [WeakAuras.PowerAurasPath.."Aura100"] = "Japanese Character",
-    [WeakAuras.PowerAurasPath.."Aura101"] = "Ball of Flame",
-    [WeakAuras.PowerAurasPath.."Aura102"] = "Zig-Zag",
-    [WeakAuras.PowerAurasPath.."Aura103"] = "Thorny Ring",
-    [WeakAuras.PowerAurasPath.."Aura110"] = "Hunter's Mark",
+    [WeakAuras.PowerAurasPath .. "Aura87"] = "Fairy",
+    [WeakAuras.PowerAurasPath .. "Aura88"] = "Comet",
+    [WeakAuras.PowerAurasPath .. "Aura95"] = "Dual Spiral",
+    [WeakAuras.PowerAurasPath .. "Aura96"] = "Japanese Character",
+    [WeakAuras.PowerAurasPath .. "Aura97"] = "Japanese Character",
+    [WeakAuras.PowerAurasPath .. "Aura98"] = "Japanese Character",
+    [WeakAuras.PowerAurasPath .. "Aura99"] = "Japanese Character",
+    [WeakAuras.PowerAurasPath .. "Aura100"] = "Japanese Character",
+    [WeakAuras.PowerAurasPath .. "Aura101"] = "Ball of Flame",
+    [WeakAuras.PowerAurasPath .. "Aura102"] = "Zig-Zag",
+    [WeakAuras.PowerAurasPath .. "Aura103"] = "Thorny Ring",
+    [WeakAuras.PowerAurasPath .. "Aura110"] = "Hunter's Mark",
     --   [WeakAuras.PowerAurasPath.."Aura111"] = "Hunter's Mark Horizontal",
-    [WeakAuras.PowerAurasPath.."Aura112"] = "Kaleidoscope",
-    [WeakAuras.PowerAurasPath.."Aura113"] = "Jesus Face",
-    [WeakAuras.PowerAurasPath.."Aura114"] = "Green Mushrrom",
-    [WeakAuras.PowerAurasPath.."Aura115"] = "Red Mushroom",
-    [WeakAuras.PowerAurasPath.."Aura116"] = "Fire Flower",
-    [WeakAuras.PowerAurasPath.."Aura117"] = "Radioactive",
-    [WeakAuras.PowerAurasPath.."Aura118"] = "X",
-    [WeakAuras.PowerAurasPath.."Aura119"] = "Flower",
-    [WeakAuras.PowerAurasPath.."Aura120"] = "Petal",
-    [WeakAuras.PowerAurasPath.."Aura130"] = "Shoop Da Woop",
-    [WeakAuras.PowerAurasPath.."Aura131"] = "8-Bit Symbol",
-    [WeakAuras.PowerAurasPath.."Aura132"] = "Cartoon Skull",
-    [WeakAuras.PowerAurasPath.."Aura138"] = "Stop",
-    [WeakAuras.PowerAurasPath.."Aura139"] = "Thumbs Up",
-    [WeakAuras.PowerAurasPath.."Aura140"] = "Palette",
-    [WeakAuras.PowerAurasPath.."Aura141"] = "Blue Ring",
-    [WeakAuras.PowerAurasPath.."Aura142"] = "Ornate Ring",
-    [WeakAuras.PowerAurasPath.."Aura143"] = "Ghostly Skull"
+    [WeakAuras.PowerAurasPath .. "Aura112"] = "Kaleidoscope",
+    [WeakAuras.PowerAurasPath .. "Aura113"] = "Jesus Face",
+    [WeakAuras.PowerAurasPath .. "Aura114"] = "Green Mushrrom",
+    [WeakAuras.PowerAurasPath .. "Aura115"] = "Red Mushroom",
+    [WeakAuras.PowerAurasPath .. "Aura116"] = "Fire Flower",
+    [WeakAuras.PowerAurasPath .. "Aura117"] = "Radioactive",
+    [WeakAuras.PowerAurasPath .. "Aura118"] = "X",
+    [WeakAuras.PowerAurasPath .. "Aura119"] = "Flower",
+    [WeakAuras.PowerAurasPath .. "Aura120"] = "Petal",
+    [WeakAuras.PowerAurasPath .. "Aura130"] = "Shoop Da Woop",
+    [WeakAuras.PowerAurasPath .. "Aura131"] = "8-Bit Symbol",
+    [WeakAuras.PowerAurasPath .. "Aura132"] = "Cartoon Skull",
+    [WeakAuras.PowerAurasPath .. "Aura138"] = "Stop",
+    [WeakAuras.PowerAurasPath .. "Aura139"] = "Thumbs Up",
+    [WeakAuras.PowerAurasPath .. "Aura140"] = "Palette",
+    [WeakAuras.PowerAurasPath .. "Aura141"] = "Blue Ring",
+    [WeakAuras.PowerAurasPath .. "Aura142"] = "Ornate Ring",
+    [WeakAuras.PowerAurasPath .. "Aura143"] = "Ghostly Skull"
   }
   WeakAuras.texture_types["PowerAuras Separated"] = {
-    [WeakAuras.PowerAurasPath.."Aura46"] = "8-Part Ring 1",
-    [WeakAuras.PowerAurasPath.."Aura47"] = "8-Part Ring 2",
-    [WeakAuras.PowerAurasPath.."Aura55"] = "Skull on Gear 1",
-    [WeakAuras.PowerAurasPath.."Aura56"] = "Skull on Gear 2",
-    [WeakAuras.PowerAurasPath.."Aura57"] = "Skull on Gear 3",
-    [WeakAuras.PowerAurasPath.."Aura58"] = "Skull on Gear 4",
-    [WeakAuras.PowerAurasPath.."Aura59"] = "Rune Ring Full",
-    [WeakAuras.PowerAurasPath.."Aura60"] = "Rune Ring Empty",
-    [WeakAuras.PowerAurasPath.."Aura61"] = "Rune Ring Left",
-    [WeakAuras.PowerAurasPath.."Aura62"] = "Rune Ring Right",
-    [WeakAuras.PowerAurasPath.."Aura63"] = "Spiked Rune Ring Full",
-    [WeakAuras.PowerAurasPath.."Aura64"] = "Spiked Rune Ring Empty",
-    [WeakAuras.PowerAurasPath.."Aura65"] = "Spiked Rune Ring Left",
-    [WeakAuras.PowerAurasPath.."Aura66"] = "Spiked Rune Ring Bottom",
-    [WeakAuras.PowerAurasPath.."Aura67"] = "Spiked Rune Ring Right",
-    [WeakAuras.PowerAurasPath.."Aura80"] = "Spiked Helm Background",
-    [WeakAuras.PowerAurasPath.."Aura81"] = "Spiked Helm Full",
-    [WeakAuras.PowerAurasPath.."Aura82"] = "Spiked Helm Bottom",
-    [WeakAuras.PowerAurasPath.."Aura83"] = "Spiked Helm Top",
-    [WeakAuras.PowerAurasPath.."Aura89"] = "5-Part Ring 1",
-    [WeakAuras.PowerAurasPath.."Aura90"] = "5-Part Ring 2",
-    [WeakAuras.PowerAurasPath.."Aura91"] = "5-Part Ring 3",
-    [WeakAuras.PowerAurasPath.."Aura92"] = "5-Part Ring 4",
-    [WeakAuras.PowerAurasPath.."Aura93"] = "5-Part Ring 5",
-    [WeakAuras.PowerAurasPath.."Aura94"] = "5-Part Ring Full",
-    [WeakAuras.PowerAurasPath.."Aura104"] = "Shield Center",
-    [WeakAuras.PowerAurasPath.."Aura105"] = "Shield Full",
-    [WeakAuras.PowerAurasPath.."Aura106"] = "Shield Top Right",
-    [WeakAuras.PowerAurasPath.."Aura107"] = "Shiled Top Left",
-    [WeakAuras.PowerAurasPath.."Aura108"] = "Shield Bottom Right",
-    [WeakAuras.PowerAurasPath.."Aura109"] = "Shield Bottom Left",
-    [WeakAuras.PowerAurasPath.."Aura121"] = "Vine Top Right Leaf",
-    [WeakAuras.PowerAurasPath.."Aura122"] = "Vine Left Leaf",
-    [WeakAuras.PowerAurasPath.."Aura123"] = "Vine Bottom Right Leaf",
-    [WeakAuras.PowerAurasPath.."Aura124"] = "Vine Stem",
-    [WeakAuras.PowerAurasPath.."Aura125"] = "Vine Thorns",
-    [WeakAuras.PowerAurasPath.."Aura126"] = "3-Part Circle 1",
-    [WeakAuras.PowerAurasPath.."Aura127"] = "3-Part Circle 2",
-    [WeakAuras.PowerAurasPath.."Aura128"] = "3-Part Circle 3",
-    [WeakAuras.PowerAurasPath.."Aura129"] = "3-Part Circle Full",
-    [WeakAuras.PowerAurasPath.."Aura133"] = "Sliced Orb 1",
-    [WeakAuras.PowerAurasPath.."Aura134"] = "Sliced Orb 2",
-    [WeakAuras.PowerAurasPath.."Aura135"] = "Sliced Orb 3",
-    [WeakAuras.PowerAurasPath.."Aura136"] = "Sliced Orb 4",
-    [WeakAuras.PowerAurasPath.."Aura137"] = "Sliced Orb 5",
-    [WeakAuras.PowerAurasPath.."Aura144"] = "Taijitu Bottom",
-    [WeakAuras.PowerAurasPath.."Aura145"] = "Taijitu Top"
+    [WeakAuras.PowerAurasPath .. "Aura46"] = "8-Part Ring 1",
+    [WeakAuras.PowerAurasPath .. "Aura47"] = "8-Part Ring 2",
+    [WeakAuras.PowerAurasPath .. "Aura55"] = "Skull on Gear 1",
+    [WeakAuras.PowerAurasPath .. "Aura56"] = "Skull on Gear 2",
+    [WeakAuras.PowerAurasPath .. "Aura57"] = "Skull on Gear 3",
+    [WeakAuras.PowerAurasPath .. "Aura58"] = "Skull on Gear 4",
+    [WeakAuras.PowerAurasPath .. "Aura59"] = "Rune Ring Full",
+    [WeakAuras.PowerAurasPath .. "Aura60"] = "Rune Ring Empty",
+    [WeakAuras.PowerAurasPath .. "Aura61"] = "Rune Ring Left",
+    [WeakAuras.PowerAurasPath .. "Aura62"] = "Rune Ring Right",
+    [WeakAuras.PowerAurasPath .. "Aura63"] = "Spiked Rune Ring Full",
+    [WeakAuras.PowerAurasPath .. "Aura64"] = "Spiked Rune Ring Empty",
+    [WeakAuras.PowerAurasPath .. "Aura65"] = "Spiked Rune Ring Left",
+    [WeakAuras.PowerAurasPath .. "Aura66"] = "Spiked Rune Ring Bottom",
+    [WeakAuras.PowerAurasPath .. "Aura67"] = "Spiked Rune Ring Right",
+    [WeakAuras.PowerAurasPath .. "Aura80"] = "Spiked Helm Background",
+    [WeakAuras.PowerAurasPath .. "Aura81"] = "Spiked Helm Full",
+    [WeakAuras.PowerAurasPath .. "Aura82"] = "Spiked Helm Bottom",
+    [WeakAuras.PowerAurasPath .. "Aura83"] = "Spiked Helm Top",
+    [WeakAuras.PowerAurasPath .. "Aura89"] = "5-Part Ring 1",
+    [WeakAuras.PowerAurasPath .. "Aura90"] = "5-Part Ring 2",
+    [WeakAuras.PowerAurasPath .. "Aura91"] = "5-Part Ring 3",
+    [WeakAuras.PowerAurasPath .. "Aura92"] = "5-Part Ring 4",
+    [WeakAuras.PowerAurasPath .. "Aura93"] = "5-Part Ring 5",
+    [WeakAuras.PowerAurasPath .. "Aura94"] = "5-Part Ring Full",
+    [WeakAuras.PowerAurasPath .. "Aura104"] = "Shield Center",
+    [WeakAuras.PowerAurasPath .. "Aura105"] = "Shield Full",
+    [WeakAuras.PowerAurasPath .. "Aura106"] = "Shield Top Right",
+    [WeakAuras.PowerAurasPath .. "Aura107"] = "Shiled Top Left",
+    [WeakAuras.PowerAurasPath .. "Aura108"] = "Shield Bottom Right",
+    [WeakAuras.PowerAurasPath .. "Aura109"] = "Shield Bottom Left",
+    [WeakAuras.PowerAurasPath .. "Aura121"] = "Vine Top Right Leaf",
+    [WeakAuras.PowerAurasPath .. "Aura122"] = "Vine Left Leaf",
+    [WeakAuras.PowerAurasPath .. "Aura123"] = "Vine Bottom Right Leaf",
+    [WeakAuras.PowerAurasPath .. "Aura124"] = "Vine Stem",
+    [WeakAuras.PowerAurasPath .. "Aura125"] = "Vine Thorns",
+    [WeakAuras.PowerAurasPath .. "Aura126"] = "3-Part Circle 1",
+    [WeakAuras.PowerAurasPath .. "Aura127"] = "3-Part Circle 2",
+    [WeakAuras.PowerAurasPath .. "Aura128"] = "3-Part Circle 3",
+    [WeakAuras.PowerAurasPath .. "Aura129"] = "3-Part Circle Full",
+    [WeakAuras.PowerAurasPath .. "Aura133"] = "Sliced Orb 1",
+    [WeakAuras.PowerAurasPath .. "Aura134"] = "Sliced Orb 2",
+    [WeakAuras.PowerAurasPath .. "Aura135"] = "Sliced Orb 3",
+    [WeakAuras.PowerAurasPath .. "Aura136"] = "Sliced Orb 4",
+    [WeakAuras.PowerAurasPath .. "Aura137"] = "Sliced Orb 5",
+    [WeakAuras.PowerAurasPath .. "Aura144"] = "Taijitu Bottom",
+    [WeakAuras.PowerAurasPath .. "Aura145"] = "Taijitu Top"
   }
   WeakAuras.texture_types["PowerAuras Words"] = {
-    [WeakAuras.PowerAurasPath.."Aura20"] = "Power",
-    [WeakAuras.PowerAurasPath.."Aura37"] = "Slow",
-    [WeakAuras.PowerAurasPath.."Aura38"] = "Stun",
-    [WeakAuras.PowerAurasPath.."Aura39"] = "Silence",
-    [WeakAuras.PowerAurasPath.."Aura40"] = "Root",
-    [WeakAuras.PowerAurasPath.."Aura41"] = "Disorient",
-    [WeakAuras.PowerAurasPath.."Aura42"] = "Dispell",
-    [WeakAuras.PowerAurasPath.."Aura43"] = "Danger",
-    [WeakAuras.PowerAurasPath.."Aura44"] = "Buff",
-    [WeakAuras.PowerAurasPath.."Aura44"] = "Buff",
+    [WeakAuras.PowerAurasPath .. "Aura20"] = "Power",
+    [WeakAuras.PowerAurasPath .. "Aura37"] = "Slow",
+    [WeakAuras.PowerAurasPath .. "Aura38"] = "Stun",
+    [WeakAuras.PowerAurasPath .. "Aura39"] = "Silence",
+    [WeakAuras.PowerAurasPath .. "Aura40"] = "Root",
+    [WeakAuras.PowerAurasPath .. "Aura41"] = "Disorient",
+    [WeakAuras.PowerAurasPath .. "Aura42"] = "Dispell",
+    [WeakAuras.PowerAurasPath .. "Aura43"] = "Danger",
+    [WeakAuras.PowerAurasPath .. "Aura44"] = "Buff",
+    [WeakAuras.PowerAurasPath .. "Aura44"] = "Buff",
     ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\interrupt"] = "Interrupt"
   }
 end
@@ -1191,13 +1228,13 @@ WeakAuras.string_operator_types = {
 }
 
 WeakAuras.weapon_types = {
-  ["main"] = MAINHANDSLOT,
-  ["off"] = SECONDARYHANDSLOT
+  main = MAINHANDSLOT,
+  off = SECONDARYHANDSLOT
 }
 
 WeakAuras.swing_types = {
-  ["main"] = MAINHANDSLOT,
-  ["off"] = SECONDARYHANDSLOT
+  main = MAINHANDSLOT,
+  off = SECONDARYHANDSLOT
 }
 
 if WeakAuras.IsClassic() then
@@ -1214,42 +1251,40 @@ WeakAuras.rune_specific_types = {
 }
 
 WeakAuras.custom_trigger_types = {
-  ["event"] = L["Event"],
-  ["status"] = L["Status"],
-  ["stateupdate"] = L["Trigger State Updater (Advanced)"]
+  event = L["Event"],
+  status = L["Status"],
+  stateupdate = L["Trigger State Updater (Advanced)"]
 }
 
 WeakAuras.eventend_types = {
-  ["timed"] = L["Timed"],
-  ["custom"] = L["Custom"]
+  timed = L["Timed"],
+  custom = L["Custom"]
 }
 
 WeakAuras.autoeventend_types = {
-  ["auto"] = L["Automatic"],
-  ["custom"] = L["Custom"]
+  auto = L["Automatic"],
+  custom = L["Custom"]
 }
 
-WeakAuras.timedeventend_types = {
-  ["timed"] = L["Timed"],
-}
+WeakAuras.timedeventend_types = { timed = L["Timed"] }
 
 WeakAuras.justify_types = {
-  ["LEFT"] = L["Left"],
-  ["CENTER"] = L["Center"],
-  ["RIGHT"] = L["Right"]
+  LEFT = L["Left"],
+  CENTER = L["Center"],
+  RIGHT = L["Right"]
 }
 
 WeakAuras.grow_types = {
-  ["LEFT"] = L["Left"],
-  ["RIGHT"] = L["Right"],
-  ["UP"] = L["Up"],
-  ["DOWN"] = L["Down"],
-  ["HORIZONTAL"] = L["Centered Horizontal"],
-  ["VERTICAL"] = L["Centered Vertical"],
-  ["CIRCLE"] = L["Counter Clockwise"],
-  ["COUNTERCIRCLE"] = L["Clockwise"],
-  ["GRID"] = L["Grid"],
-  ["CUSTOM"] = L["Custom"],
+  LEFT = L["Left"],
+  RIGHT = L["Right"],
+  UP = L["Up"],
+  DOWN = L["Down"],
+  HORIZONTAL = L["Centered Horizontal"],
+  VERTICAL = L["Centered Vertical"],
+  CIRCLE = L["Counter Clockwise"],
+  COUNTERCIRCLE = L["Clockwise"],
+  GRID = L["Grid"],
+  CUSTOM = L["Custom"]
 }
 
 -- horizontal types: R (right), L (left)
@@ -1262,35 +1297,35 @@ WeakAuras.grid_types = {
   RD = L["Right, then Down"],
   DR = L["Down, then Right"],
   LD = L["Left, then Down"],
-  DL = L["Down, then Left"],
+  DL = L["Down, then Left"]
 }
 
 WeakAuras.text_rotate_types = {
-  ["LEFT"] = L["Left"],
-  ["NONE"] = L["None"],
-  ["RIGHT"] = L["Right"]
+  LEFT = L["Left"],
+  NONE = L["None"],
+  RIGHT = L["Right"]
 }
 
 WeakAuras.align_types = {
-  ["LEFT"] = L["Left"],
-  ["CENTER"] = L["Center"],
-  ["RIGHT"] = L["Right"]
+  LEFT = L["Left"],
+  CENTER = L["Center"],
+  RIGHT = L["Right"]
 }
 
 WeakAuras.rotated_align_types = {
-  ["LEFT"] = L["Top"],
-  ["CENTER"] = L["Center"],
-  ["RIGHT"] = L["Bottom"]
+  LEFT = L["Top"],
+  CENTER = L["Center"],
+  RIGHT = L["Bottom"]
 }
 
 WeakAuras.icon_side_types = {
-  ["LEFT"] = L["Left"],
-  ["RIGHT"] = L["Right"]
+  LEFT = L["Left"],
+  RIGHT = L["Right"]
 }
 
 WeakAuras.rotated_icon_side_types = {
-  ["LEFT"] = L["Top"],
-  ["RIGHT"] = L["Bottom"]
+  LEFT = L["Top"],
+  RIGHT = L["Bottom"]
 }
 
 WeakAuras.anim_types = {
@@ -1370,9 +1405,9 @@ WeakAuras.difficulty_types = {
 }
 
 WeakAuras.role_types = {
-  TANK = INLINE_TANK_ICON.." "..TANK,
-  DAMAGER = INLINE_DAMAGER_ICON.." "..DAMAGER,
-  HEALER = INLINE_HEALER_ICON.." "..HEALER
+  TANK = INLINE_TANK_ICON .. " " .. TANK,
+  DAMAGER = INLINE_DAMAGER_ICON .. " " .. DAMAGER,
+  HEALER = INLINE_HEALER_ICON .. " " .. HEALER
 }
 
 WeakAuras.anim_start_preset_types = {
@@ -1408,10 +1443,10 @@ WeakAuras.anim_finish_preset_types = {
   slidebottom = L["Slide to Bottom"],
   fade = L["Fade Out"],
   shrink = L["Shrink"],
-  grow =L["Grow"],
+  grow = L["Grow"],
   spiral = L["Spiral"],
   bounceDecay = L["Bounce"]
-};
+}
 
 WeakAuras.chat_message_types = {
   CHAT_MSG_INSTANCE_CHAT = L["Instance"],
@@ -1473,102 +1508,384 @@ WeakAuras.cast_types = {
 }
 
 -- register sounds
-LSM:Register("sound", "Batman Punch", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\BatmanPunch.ogg")
-LSM:Register("sound", "Bike Horn", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\BikeHorn.ogg")
-LSM:Register("sound", "Boxing Arena Gong", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\BoxingArenaSound.ogg")
-LSM:Register("sound", "Bleat", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Bleat.ogg")
-LSM:Register("sound", "Cartoon Hop", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\CartoonHop.ogg")
-LSM:Register("sound", "Cat Meow", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\CatMeow2.ogg")
-LSM:Register("sound", "Kitten Meow", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\KittenMeow.ogg")
-LSM:Register("sound", "Robot Blip", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\RobotBlip.ogg")
-LSM:Register("sound", "Sharp Punch", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\SharpPunch.ogg")
-LSM:Register("sound", "Water Drop", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\WaterDrop.ogg")
-LSM:Register("sound", "Air Horn", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\AirHorn.ogg")
-LSM:Register("sound", "Applause", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Applause.ogg")
-LSM:Register("sound", "Banana Peel Slip", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\BananaPeelSlip.ogg")
-LSM:Register("sound", "Blast", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Blast.ogg")
-LSM:Register("sound", "Cartoon Voice Baritone", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\CartoonVoiceBaritone.ogg")
-LSM:Register("sound", "Cartoon Walking", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\CartoonWalking.ogg")
-LSM:Register("sound", "Cow Mooing", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\CowMooing.ogg")
-LSM:Register("sound", "Ringing Phone", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\RingingPhone.ogg")
-LSM:Register("sound", "Roaring Lion", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\RoaringLion.ogg")
-LSM:Register("sound", "Shotgun", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Shotgun.ogg")
-LSM:Register("sound", "Squish Fart", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\SquishFart.ogg")
-LSM:Register("sound", "Temple Bell", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\TempleBellHuge.ogg")
-LSM:Register("sound", "Torch", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Torch.ogg")
-LSM:Register("sound", "Warning Siren", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\WarningSiren.ogg")
+LSM:Register(
+  "sound",
+  "Batman Punch",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\BatmanPunch.ogg"
+)
+LSM:Register(
+  "sound",
+  "Bike Horn",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\BikeHorn.ogg"
+)
+LSM:Register(
+  "sound",
+  "Boxing Arena Gong",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\BoxingArenaSound.ogg"
+)
+LSM:Register(
+  "sound",
+  "Bleat",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Bleat.ogg"
+)
+LSM:Register(
+  "sound",
+  "Cartoon Hop",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\CartoonHop.ogg"
+)
+LSM:Register(
+  "sound",
+  "Cat Meow",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\CatMeow2.ogg"
+)
+LSM:Register(
+  "sound",
+  "Kitten Meow",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\KittenMeow.ogg"
+)
+LSM:Register(
+  "sound",
+  "Robot Blip",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\RobotBlip.ogg"
+)
+LSM:Register(
+  "sound",
+  "Sharp Punch",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\SharpPunch.ogg"
+)
+LSM:Register(
+  "sound",
+  "Water Drop",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\WaterDrop.ogg"
+)
+LSM:Register(
+  "sound",
+  "Air Horn",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\AirHorn.ogg"
+)
+LSM:Register(
+  "sound",
+  "Applause",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Applause.ogg"
+)
+LSM:Register(
+  "sound",
+  "Banana Peel Slip",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\BananaPeelSlip.ogg"
+)
+LSM:Register(
+  "sound",
+  "Blast",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Blast.ogg"
+)
+LSM:Register(
+  "sound",
+  "Cartoon Voice Baritone",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\CartoonVoiceBaritone.ogg"
+)
+LSM:Register(
+  "sound",
+  "Cartoon Walking",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\CartoonWalking.ogg"
+)
+LSM:Register(
+  "sound",
+  "Cow Mooing",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\CowMooing.ogg"
+)
+LSM:Register(
+  "sound",
+  "Ringing Phone",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\RingingPhone.ogg"
+)
+LSM:Register(
+  "sound",
+  "Roaring Lion",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\RoaringLion.ogg"
+)
+LSM:Register(
+  "sound",
+  "Shotgun",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Shotgun.ogg"
+)
+LSM:Register(
+  "sound",
+  "Squish Fart",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\SquishFart.ogg"
+)
+LSM:Register(
+  "sound",
+  "Temple Bell",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\TempleBellHuge.ogg"
+)
+LSM:Register(
+  "sound",
+  "Torch",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Torch.ogg"
+)
+LSM:Register(
+  "sound",
+  "Warning Siren",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\WarningSiren.ogg"
+)
 LSM:Register("sound", "Lich King Apocalypse", 554003) -- Sound\Creature\LichKing\IC_Lich King_Special01.ogg
+LSM:Register(
+  "sound",
+  "Voice: Adds",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Adds.ogg"
+)
+LSM:Register(
+  "sound",
+  "Voice: Boss",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Boss.ogg"
+)
+LSM:Register(
+  "sound",
+  "Voice: Circle",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Circle.ogg"
+)
+LSM:Register(
+  "sound",
+  "Voice: Cross",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Cross.ogg"
+)
+LSM:Register(
+  "sound",
+  "Voice: Diamond",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Diamond.ogg"
+)
+LSM:Register(
+  "sound",
+  "Voice: Don't Release",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\DontRelease.ogg"
+)
+LSM:Register(
+  "sound",
+  "Voice: Empowered",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Empowered.ogg"
+)
+LSM:Register(
+  "sound",
+  "Voice: Focus",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Focus.ogg"
+)
+LSM:Register(
+  "sound",
+  "Voice: Idiot",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Idiot.ogg"
+)
+LSM:Register(
+  "sound",
+  "Voice: Left",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Left.ogg"
+)
+LSM:Register(
+  "sound",
+  "Voice: Moon",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Moon.ogg"
+)
+LSM:Register(
+  "sound",
+  "Voice: Next",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Next.ogg"
+)
+LSM:Register(
+  "sound",
+  "Voice: Portal",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Portal.ogg"
+)
+LSM:Register(
+  "sound",
+  "Voice: Protected",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Protected.ogg"
+)
+LSM:Register(
+  "sound",
+  "Voice: Release",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Release.ogg"
+)
+LSM:Register(
+  "sound",
+  "Voice: Right",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Right.ogg"
+)
+LSM:Register(
+  "sound",
+  "Voice: Run Away",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\RunAway.ogg"
+)
+LSM:Register(
+  "sound",
+  "Voice: Skull",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Skull.ogg"
+)
+LSM:Register(
+  "sound",
+  "Voice: Spread",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Spread.ogg"
+)
+LSM:Register(
+  "sound",
+  "Voice: Square",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Square.ogg"
+)
+LSM:Register(
+  "sound",
+  "Voice: Stack",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Stack.ogg"
+)
+LSM:Register(
+  "sound",
+  "Voice: Star",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Star.ogg"
+)
+LSM:Register(
+  "sound",
+  "Voice: Switch",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Switch.ogg"
+)
+LSM:Register(
+  "sound",
+  "Voice: Taunt",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Taunt.ogg"
+)
+LSM:Register(
+  "sound",
+  "Voice: Triangle",
+  "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Triangle.ogg"
+)
 
-LSM:Register("sound", "Voice: Adds", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Adds.ogg")
-LSM:Register("sound", "Voice: Boss", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Boss.ogg")
-LSM:Register("sound", "Voice: Circle", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Circle.ogg")
-LSM:Register("sound", "Voice: Cross", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Cross.ogg")
-LSM:Register("sound", "Voice: Diamond", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Diamond.ogg")
-LSM:Register("sound", "Voice: Don't Release", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\DontRelease.ogg")
-LSM:Register("sound", "Voice: Empowered", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Empowered.ogg")
-LSM:Register("sound", "Voice: Focus", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Focus.ogg")
-LSM:Register("sound", "Voice: Idiot", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Idiot.ogg")
-LSM:Register("sound", "Voice: Left", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Left.ogg")
-LSM:Register("sound", "Voice: Moon", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Moon.ogg")
-LSM:Register("sound", "Voice: Next", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Next.ogg")
-LSM:Register("sound", "Voice: Portal", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Portal.ogg")
-LSM:Register("sound", "Voice: Protected", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Protected.ogg")
-LSM:Register("sound", "Voice: Release", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Release.ogg")
-LSM:Register("sound", "Voice: Right", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Right.ogg")
-LSM:Register("sound", "Voice: Run Away", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\RunAway.ogg")
-LSM:Register("sound", "Voice: Skull", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Skull.ogg")
-LSM:Register("sound", "Voice: Spread", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Spread.ogg")
-LSM:Register("sound", "Voice: Square", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Square.ogg")
-LSM:Register("sound", "Voice: Stack", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Stack.ogg")
-LSM:Register("sound", "Voice: Star", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Star.ogg")
-LSM:Register("sound", "Voice: Switch", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Switch.ogg")
-LSM:Register("sound", "Voice: Taunt", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Taunt.ogg")
-LSM:Register("sound", "Voice: Triangle", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Triangle.ogg")
-
-
-if(WeakAuras.PowerAurasSoundPath ~= "") then
-  LSM:Register("sound", "Aggro", WeakAuras.PowerAurasSoundPath.."aggro.ogg")
-  LSM:Register("sound", "Arrow Swoosh", WeakAuras.PowerAurasSoundPath.."Arrow_swoosh.ogg")
-  LSM:Register("sound", "Bam", WeakAuras.PowerAurasSoundPath.."bam.ogg")
-  LSM:Register("sound", "Polar Bear", WeakAuras.PowerAurasSoundPath.."bear_polar.ogg")
-  LSM:Register("sound", "Big Kiss", WeakAuras.PowerAurasSoundPath.."bigkiss.ogg")
-  LSM:Register("sound", "Bite", WeakAuras.PowerAurasSoundPath.."BITE.ogg")
-  LSM:Register("sound", "Burp", WeakAuras.PowerAurasSoundPath.."burp4.ogg")
-  LSM:Register("sound", "Cat", WeakAuras.PowerAurasSoundPath.."cat2.ogg")
-  LSM:Register("sound", "Chant Major 2nd", WeakAuras.PowerAurasSoundPath.."chant2.ogg")
-  LSM:Register("sound", "Chant Minor 3rd", WeakAuras.PowerAurasSoundPath.."chant4.ogg")
-  LSM:Register("sound", "Chimes", WeakAuras.PowerAurasSoundPath.."chimes.ogg")
-  LSM:Register("sound", "Cookie Monster", WeakAuras.PowerAurasSoundPath.."cookie.ogg")
-  LSM:Register("sound", "Electrical Spark", WeakAuras.PowerAurasSoundPath.."ESPARK1.ogg")
-  LSM:Register("sound", "Fireball", WeakAuras.PowerAurasSoundPath.."Fireball.ogg")
-  LSM:Register("sound", "Gasp", WeakAuras.PowerAurasSoundPath.."Gasp.ogg")
-  LSM:Register("sound", "Heartbeat", WeakAuras.PowerAurasSoundPath.."heartbeat.ogg")
-  LSM:Register("sound", "Hiccup", WeakAuras.PowerAurasSoundPath.."hic3.ogg")
-  LSM:Register("sound", "Huh?", WeakAuras.PowerAurasSoundPath.."huh_1.ogg")
-  LSM:Register("sound", "Hurricane", WeakAuras.PowerAurasSoundPath.."hurricane.ogg")
-  LSM:Register("sound", "Hyena", WeakAuras.PowerAurasSoundPath.."hyena.ogg")
-  LSM:Register("sound", "Kaching", WeakAuras.PowerAurasSoundPath.."kaching.ogg")
-  LSM:Register("sound", "Moan", WeakAuras.PowerAurasSoundPath.."moan.ogg")
-  LSM:Register("sound", "Panther", WeakAuras.PowerAurasSoundPath.."panther1.ogg")
-  LSM:Register("sound", "Phone", WeakAuras.PowerAurasSoundPath.."phone.ogg")
-  LSM:Register("sound", "Punch", WeakAuras.PowerAurasSoundPath.."PUNCH.ogg")
-  LSM:Register("sound", "Rain", WeakAuras.PowerAurasSoundPath.."rainroof.ogg")
-  LSM:Register("sound", "Rocket", WeakAuras.PowerAurasSoundPath.."rocket.ogg")
-  LSM:Register("sound", "Ship's Whistle", WeakAuras.PowerAurasSoundPath.."shipswhistle.ogg")
-  LSM:Register("sound", "Gunshot", WeakAuras.PowerAurasSoundPath.."shot.ogg")
-  LSM:Register("sound", "Snake Attack", WeakAuras.PowerAurasSoundPath.."snakeatt.ogg")
-  LSM:Register("sound", "Sneeze", WeakAuras.PowerAurasSoundPath.."sneeze.ogg")
-  LSM:Register("sound", "Sonar", WeakAuras.PowerAurasSoundPath.."sonar.ogg")
-  LSM:Register("sound", "Splash", WeakAuras.PowerAurasSoundPath.."splash.ogg")
-  LSM:Register("sound", "Squeaky Toy", WeakAuras.PowerAurasSoundPath.."Squeakypig.ogg")
-  LSM:Register("sound", "Sword Ring", WeakAuras.PowerAurasSoundPath.."swordecho.ogg")
-  LSM:Register("sound", "Throwing Knife", WeakAuras.PowerAurasSoundPath.."throwknife.ogg")
-  LSM:Register("sound", "Thunder", WeakAuras.PowerAurasSoundPath.."thunder.ogg")
-  LSM:Register("sound", "Wicked Male Laugh", WeakAuras.PowerAurasSoundPath.."wickedmalelaugh1.ogg")
-  LSM:Register("sound", "Wilhelm Scream", WeakAuras.PowerAurasSoundPath.."wilhelm.ogg")
-  LSM:Register("sound", "Wicked Female Laugh", WeakAuras.PowerAurasSoundPath.."wlaugh.ogg")
-  LSM:Register("sound", "Wolf Howl", WeakAuras.PowerAurasSoundPath.."wolf5.ogg")
-  LSM:Register("sound", "Yeehaw", WeakAuras.PowerAurasSoundPath.."yeehaw.ogg")
+if (WeakAuras.PowerAurasSoundPath ~= "") then
+  LSM:Register("sound", "Aggro", WeakAuras.PowerAurasSoundPath .. "aggro.ogg")
+  LSM:Register(
+    "sound",
+    "Arrow Swoosh",
+    WeakAuras.PowerAurasSoundPath .. "Arrow_swoosh.ogg"
+  )
+  LSM:Register("sound", "Bam", WeakAuras.PowerAurasSoundPath .. "bam.ogg")
+  LSM:Register(
+    "sound",
+    "Polar Bear",
+    WeakAuras.PowerAurasSoundPath .. "bear_polar.ogg"
+  )
+  LSM:Register(
+    "sound",
+    "Big Kiss",
+    WeakAuras.PowerAurasSoundPath .. "bigkiss.ogg"
+  )
+  LSM:Register("sound", "Bite", WeakAuras.PowerAurasSoundPath .. "BITE.ogg")
+  LSM:Register("sound", "Burp", WeakAuras.PowerAurasSoundPath .. "burp4.ogg")
+  LSM:Register("sound", "Cat", WeakAuras.PowerAurasSoundPath .. "cat2.ogg")
+  LSM:Register(
+    "sound",
+    "Chant Major 2nd",
+    WeakAuras.PowerAurasSoundPath .. "chant2.ogg"
+  )
+  LSM:Register(
+    "sound",
+    "Chant Minor 3rd",
+    WeakAuras.PowerAurasSoundPath .. "chant4.ogg"
+  )
+  LSM:Register("sound", "Chimes", WeakAuras.PowerAurasSoundPath .. "chimes.ogg")
+  LSM:Register(
+    "sound",
+    "Cookie Monster",
+    WeakAuras.PowerAurasSoundPath .. "cookie.ogg"
+  )
+  LSM:Register(
+    "sound",
+    "Electrical Spark",
+    WeakAuras.PowerAurasSoundPath .. "ESPARK1.ogg"
+  )
+  LSM:Register(
+    "sound",
+    "Fireball",
+    WeakAuras.PowerAurasSoundPath .. "Fireball.ogg"
+  )
+  LSM:Register("sound", "Gasp", WeakAuras.PowerAurasSoundPath .. "Gasp.ogg")
+  LSM:Register(
+    "sound",
+    "Heartbeat",
+    WeakAuras.PowerAurasSoundPath .. "heartbeat.ogg"
+  )
+  LSM:Register("sound", "Hiccup", WeakAuras.PowerAurasSoundPath .. "hic3.ogg")
+  LSM:Register("sound", "Huh?", WeakAuras.PowerAurasSoundPath .. "huh_1.ogg")
+  LSM:Register(
+    "sound",
+    "Hurricane",
+    WeakAuras.PowerAurasSoundPath .. "hurricane.ogg"
+  )
+  LSM:Register("sound", "Hyena", WeakAuras.PowerAurasSoundPath .. "hyena.ogg")
+  LSM:Register(
+    "sound",
+    "Kaching",
+    WeakAuras.PowerAurasSoundPath .. "kaching.ogg"
+  )
+  LSM:Register("sound", "Moan", WeakAuras.PowerAurasSoundPath .. "moan.ogg")
+  LSM:Register(
+    "sound",
+    "Panther",
+    WeakAuras.PowerAurasSoundPath .. "panther1.ogg"
+  )
+  LSM:Register("sound", "Phone", WeakAuras.PowerAurasSoundPath .. "phone.ogg")
+  LSM:Register("sound", "Punch", WeakAuras.PowerAurasSoundPath .. "PUNCH.ogg")
+  LSM:Register("sound", "Rain", WeakAuras.PowerAurasSoundPath .. "rainroof.ogg")
+  LSM:Register("sound", "Rocket", WeakAuras.PowerAurasSoundPath .. "rocket.ogg")
+  LSM:Register(
+    "sound",
+    "Ship's Whistle",
+    WeakAuras.PowerAurasSoundPath .. "shipswhistle.ogg"
+  )
+  LSM:Register("sound", "Gunshot", WeakAuras.PowerAurasSoundPath .. "shot.ogg")
+  LSM:Register(
+    "sound",
+    "Snake Attack",
+    WeakAuras.PowerAurasSoundPath .. "snakeatt.ogg"
+  )
+  LSM:Register("sound", "Sneeze", WeakAuras.PowerAurasSoundPath .. "sneeze.ogg")
+  LSM:Register("sound", "Sonar", WeakAuras.PowerAurasSoundPath .. "sonar.ogg")
+  LSM:Register("sound", "Splash", WeakAuras.PowerAurasSoundPath .. "splash.ogg")
+  LSM:Register(
+    "sound",
+    "Squeaky Toy",
+    WeakAuras.PowerAurasSoundPath .. "Squeakypig.ogg"
+  )
+  LSM:Register(
+    "sound",
+    "Sword Ring",
+    WeakAuras.PowerAurasSoundPath .. "swordecho.ogg"
+  )
+  LSM:Register(
+    "sound",
+    "Throwing Knife",
+    WeakAuras.PowerAurasSoundPath .. "throwknife.ogg"
+  )
+  LSM:Register(
+    "sound",
+    "Thunder",
+    WeakAuras.PowerAurasSoundPath .. "thunder.ogg"
+  )
+  LSM:Register(
+    "sound",
+    "Wicked Male Laugh",
+    WeakAuras.PowerAurasSoundPath .. "wickedmalelaugh1.ogg"
+  )
+  LSM:Register(
+    "sound",
+    "Wilhelm Scream",
+    WeakAuras.PowerAurasSoundPath .. "wilhelm.ogg"
+  )
+  LSM:Register(
+    "sound",
+    "Wicked Female Laugh",
+    WeakAuras.PowerAurasSoundPath .. "wlaugh.ogg"
+  )
+  LSM:Register(
+    "sound",
+    "Wolf Howl",
+    WeakAuras.PowerAurasSoundPath .. "wolf5.ogg"
+  )
+  LSM:Register("sound", "Yeehaw", WeakAuras.PowerAurasSoundPath .. "yeehaw.ogg")
 end
 
 WeakAuras.sound_types = {
@@ -1580,7 +1897,11 @@ for name, path in next, LSM:HashTable("sound") do
   WeakAuras.sound_types[path] = name
 end
 
-LSM.RegisterCallback(WeakAuras, "LibSharedMedia_Registered", function(_, mediatype, key)
+LSM.RegisterCallback(WeakAuras, "LibSharedMedia_Registered", function(
+_,
+  mediatype,
+  key
+)
   if mediatype == "sound" then
     local path = LSM:Fetch(mediatype, key)
     if path then
@@ -1590,19 +1911,26 @@ LSM.RegisterCallback(WeakAuras, "LibSharedMedia_Registered", function(_, mediaty
 end)
 
 -- register options font
-LSM:Register("font", "Fira Mono Medium", "Interface\\Addons\\WeakAuras\\Media\\Fonts\\FiraMono-Medium.ttf", LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_ruRU)
+LSM:Register(
+  "font",
+  "Fira Mono Medium",
+  "Interface\\Addons\\WeakAuras\\Media\\Fonts\\FiraMono-Medium.ttf",
+  LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_ruRU
+)
 
 -- register plain white border
-LSM:Register("border", "Square Full White", [[Interface\AddOns\WeakAuras\Media\Textures\Square_FullWhite.tga]])
+LSM:Register(
+  "border",
+  "Square Full White",
+  [[Interface\AddOns\WeakAuras\Media\Textures\Square_FullWhite.tga]]
+)
 
 WeakAuras.duration_types = {
   seconds = L["Seconds"],
   relative = L["Relative"]
 }
 
-WeakAuras.duration_types_no_choice = {
-  seconds = L["Seconds"]
-}
+WeakAuras.duration_types_no_choice = { seconds = L["Seconds"] }
 
 WeakAuras.gtfo_types = {
   [1] = L["High Damage"],
@@ -1647,7 +1975,7 @@ WeakAuras.cooldown_types = {
 WeakAuras.bufftrigger_progress_behavior_types = {
   showOnActive = L["Buffed/Debuffed"],
   showOnMissing = L["Missing"],
-  showAlways= L["Always"]
+  showAlways = L["Always"]
 }
 
 WeakAuras.bufftrigger_2_progress_behavior_types = {
@@ -1657,8 +1985,7 @@ WeakAuras.bufftrigger_2_progress_behavior_types = {
   showOnMatches = L["Match Count"]
 }
 
-WeakAuras.bufftrigger_2_preferred_match_types =
-{
+WeakAuras.bufftrigger_2_preferred_match_types = {
   showLowest = L["Least remaining time"],
   showHighest = L["Most remaining time"]
 }
@@ -1681,18 +2008,18 @@ WeakAuras.bufftrigger_2_combine_group_types = {
   showClones = L["Show all Matches from all Units"],
   showLowestPerUnit = L["Show lowest time left per unit"],
   showHighestPerUnit = L["Show longest time left per unit"],
-  showCombineAll = L["Combine all matches"],
+  showCombineAll = L["Combine all matches"]
 }
 
 WeakAuras.item_slot_types = {
-  [1]  = HEADSLOT,
-  [2]  = NECKSLOT,
-  [3]  = SHOULDERSLOT,
-  [5]  = CHESTSLOT,
-  [6]  = WAISTSLOT,
-  [7]  = LEGSSLOT,
-  [8]  = FEETSLOT,
-  [9]  = WRISTSLOT,
+  [1] = HEADSLOT,
+  [2] = NECKSLOT,
+  [3] = SHOULDERSLOT,
+  [5] = CHESTSLOT,
+  [6] = WAISTSLOT,
+  [7] = LEGSSLOT,
+  [8] = FEETSLOT,
+  [9] = WRISTSLOT,
   [10] = HANDSSLOT,
   [11] = FINGER0SLOT_UNIQUE,
   [12] = FINGER1SLOT_UNIQUE,
@@ -1748,130 +2075,111 @@ WeakAuras.mythic_plus_affixes = {
 
 if not WeakAuras.IsClassic() then
   for k in pairs(WeakAuras.mythic_plus_affixes) do
-    WeakAuras.mythic_plus_affixes[k] = C_ChallengeMode.GetAffixInfo(k);
+    WeakAuras.mythic_plus_affixes[k] = C_ChallengeMode.GetAffixInfo(k)
   end
 end
 
-WeakAuras.update_categories = {
-  {
-    name = "anchor",
-    fields = {
-      "xOffset",
-      "yOffset",
-      "selfPoint",
-      "anchorPoint",
-      "anchorFrameType",
-      "anchorFrameFrame",
-      "frameStrata",
-      "height",
-      "width",
-      "fontSize",
-      "scale",
-    },
-    default = false,
-    label = L["Size & Position"],
+WeakAuras.update_categories = { {
+  name = "anchor",
+  fields = {
+    "xOffset",
+    "yOffset",
+    "selfPoint",
+    "anchorPoint",
+    "anchorFrameType",
+    "anchorFrameFrame",
+    "frameStrata",
+    "height",
+    "width",
+    "fontSize",
+    "scale"
   },
-  {
-    name = "userconfig",
-    fields = {"config"},
-    default = false,
-    label = L["Custom Configuration"],
+  default = false,
+  label = L["Size & Position"]
+}, {
+  name = "userconfig",
+  fields = { "config" },
+  default = false,
+  label = L["Custom Configuration"]
+}, {
+  name = "name",
+  fields = { "id" },
+  default = true,
+  label = L["Aura Names"]
+}, {
+  name = "display",
+  fields = {},
+  default = true,
+  label = L["Display"]
+}, {
+  name = "trigger",
+  fields = { "triggers" },
+  default = true,
+  label = L["Trigger"]
+}, {
+  name = "conditions",
+  fields = { "conditions" },
+  default = true,
+  label = L["Conditions"]
+}, {
+  name = "load",
+  fields = { "load" },
+  default = true,
+  label = L["Load Conditions"]
+}, {
+  name = "action",
+  fields = { "actions" },
+  default = true,
+  label = L["Actions"]
+}, {
+  name = "animation",
+  fields = { "animation" },
+  default = true,
+  label = L["Animations"]
+}, {
+  name = "authoroptions",
+  fields = { "authorOptions" },
+  default = true,
+  label = L["Author Options"]
+}, {
+  name = "arrangement",
+  fields = {
+    "grow",
+    "space",
+    "stagger",
+    "sort",
+    "hybridPosition",
+    "radius",
+    "align",
+    "rotation",
+    "constantFactor",
+    "hybridSortMode"
   },
-  {
-    name = "name",
-    fields = {"id"},
-    default = true,
-    label = L["Aura Names"],
-  },
-  {
-    name = "display",
-    fields = {},
-    default = true,
-    label = L["Display"],
-  },
-  {
-    name = "trigger",
-    fields = {"triggers"},
-    default = true,
-    label = L["Trigger"],
-  },
-  {
-    name = "conditions",
-    fields = {"conditions"},
-    default = true,
-    label = L["Conditions"],
-  },
-  {
-    name = "load",
-    fields = {"load"},
-    default = true,
-    label = L["Load Conditions"],
-  },
-  {
-    name = "action",
-    fields = {"actions"},
-    default = true,
-    label = L["Actions"],
-  },
-  {
-    name = "animation",
-    fields = {"animation"},
-    default = true,
-    label = L["Animations"],
-  },
-  {
-    name = "authoroptions",
-    fields = {"authorOptions"},
-    default = true,
-    label = L["Author Options"]
-  },
-  {
-    name = "arrangement",
-    fields = {
-      "grow",
-      "space",
-      "stagger",
-      "sort",
-      "hybridPosition",
-      "radius",
-      "align",
-      "rotation",
-      "constantFactor",
-      "hybridSortMode",
-    },
-    default = true,
-    label = L["Group Arrangement"],
-  },
-  {
-    name = "oldchildren",
-    fields = {},
-    default = true,
-    label = L["Remove Obsolete Auras"],
-  },
-  {
-    name = "newchildren",
-    fields = {},
-    default = true,
-    label = L["Add Missing Auras"],
-  },
-  {
-    name = "metadata",
-    fields = {
-      "url",
-      "desc",
-      "version",
-    },
-    default = true,
-    label = L["Meta Data"],
-  },
-}
+  default = true,
+  label = L["Group Arrangement"]
+}, {
+  name = "oldchildren",
+  fields = {},
+  default = true,
+  label = L["Remove Obsolete Auras"]
+}, {
+  name = "newchildren",
+  fields = {},
+  default = true,
+  label = L["Add Missing Auras"]
+}, {
+  name = "metadata",
+  fields = { "url", "desc", "version" },
+  default = true,
+  label = L["Meta Data"]
+} }
 
 -- fields that are handled as special cases when importing
 -- mismatch of internal fields is not counted as a difference
 WeakAuras.internal_fields = {
   uid = true,
   internalVersion = true,
-  sortHybridTable = true,
+  sortHybridTable = true
 }
 
 -- fields that are not included in exported data
@@ -1883,60 +2191,58 @@ WeakAuras.non_transmissable_fields = {
   authorMode = true,
   skipWagoUpdate = true,
   ignoreWagoUpdate = true,
-  preferToUpdate = true,
+  preferToUpdate = true
 }
 
 WeakAuras.data_stub = {
   -- note: this is the minimal data stub which prevents false positives in WeakAuras.diff upon reimporting an aura.
   -- pending a refactor of other code which adds unnecessary fields, it is possible to shrink it
-  triggers = {
-    {
-      trigger = {
-        type = "aura2",
-        names = {},
-        event = "Health",
-        subeventPrefix = "SPELL",
-        subeventSuffix = "_CAST_START",
-        spellIds = {},
-        unit = "player",
-        debuffType = "HELPFUL",
-      },
-      untrigger = {},
+  triggers = { {
+    trigger = {
+      type = "aura2",
+      names = {},
+      event = "Health",
+      subeventPrefix = "SPELL",
+      subeventSuffix = "_CAST_START",
+      spellIds = {},
+      unit = "player",
+      debuffType = "HELPFUL"
     },
-  },
+    untrigger = {}
+  } },
   load = {
     size = {
-      multi = {},
+      multi = {}
     },
     spec = {
-      multi = {},
+      multi = {}
     },
     class = {
-      multi = {},
-    },
+      multi = {}
+    }
   },
   actions = {
     init = {},
     start = {},
-    finish = {},
+    finish = {}
   },
   animation = {
     start = {
       type = "none",
-      duration_type = "seconds",
+      duration_type = "seconds"
     },
     main = {
       type = "none",
-      duration_type = "seconds",
+      duration_type = "seconds"
     },
     finish = {
       type = "none",
-      duration_type = "seconds",
-    },
+      duration_type = "seconds"
+    }
   },
   conditions = {},
   config = {},
-  authorOptions = {},
+  authorOptions = {}
 }
 
 WeakAuras.author_option_classes = {
@@ -1964,7 +2270,7 @@ WeakAuras.author_option_types = {
   space = L["Space"],
   multiselect = L["Toggle List"],
   header = L["Separator"],
-  group = WeakAuras.newFeatureString .. L["Option Group"],
+  group = WeakAuras.newFeatureString .. L["Option Group"]
 }
 
 WeakAuras.author_option_fields = {
@@ -1974,52 +2280,50 @@ WeakAuras.author_option_fields = {
     useDesc = true,
     desc = true,
     key = true,
-    width = true,
+    width = true
   },
   number = {
     min = 0,
     max = 1,
     step = .05,
-    default = 0,
+    default = 0
   },
   range = {
     min = 0,
     max = 1,
     step = .05,
-    default = 0,
+    default = 0
   },
   input = {
     default = "",
     useLength = false,
     length = 10,
-    multiline = false,
+    multiline = false
   },
-  toggle = {
-    default = false,
-  },
+  toggle = { default = false },
   description = {
     text = "",
-    fontSize = "medium",
+    fontSize = "medium"
   },
   color = {
-    default = {1, 1, 1, 1},
+    default = { 1, 1, 1, 1 }
   },
   select = {
-    values = {"val1"},
-    default = 1,
+    values = { "val1" },
+    default = 1
   },
   space = {
     variableWidth = true,
     useHeight = false,
-    height = 1,
+    height = 1
   },
   multiselect = {
-    default = {true},
-    values = {"val1"},
+    default = { true },
+    values = { "val1" }
   },
   header = {
     useName = false,
-    text = "",
+    text = ""
   },
   group = {
     groupType = "simple",
@@ -2030,13 +2334,13 @@ WeakAuras.author_option_fields = {
     nameSource = 0,
     hideReorder = true,
     entryNames = nil, -- handled as a special case in code
-    subOptions = {},
+    subOptions = {}
   }
 }
 
 WeakAuras.array_entry_name_types = {
   [-1] = L["Fixed Names"],
-  [0] = L["Entry Order"],
+  [0] = L["Entry Order"]
   -- the rest is auto-populated with indices which are valid entry name sources
 }
 
@@ -2044,140 +2348,140 @@ WeakAuras.name_source_option_types = {
   -- option types which can be used to generate entry names on arrays
   input = true,
   number = true,
-  range = true,
+  range = true
 }
 
 WeakAuras.group_limit_types = {
   none = L["Unlimited"],
   max = L["Limited"],
-  fixed = L["Fixed Size"],
+  fixed = L["Fixed Size"]
 }
 
 WeakAuras.group_option_types = {
   simple = L["Simple"],
-  array = L["Array"],
+  array = L["Array"]
 }
 
 WeakAuras.difficulty_info = {
   [1] = {
     size = "party",
-    difficulty = "normal",
+    difficulty = "normal"
   },
   [2] = {
     size = "party",
-    difficulty = "heroic",
+    difficulty = "heroic"
   },
   [3] = {
     size = "ten",
-    difficulty = "normal",
+    difficulty = "normal"
   },
   [4] = {
     size = "twentyfive",
-    difficulty = "normal",
+    difficulty = "normal"
   },
   [5] = {
     size = "ten",
-    difficulty = "heroic",
+    difficulty = "heroic"
   },
   [6] = {
     size = "twentyfive",
-    difficulty = "heroic",
+    difficulty = "heroic"
   },
   [7] = {
     size = "twentyfive",
-    difficulty = "lfr",
+    difficulty = "lfr"
   },
   [8] = {
     size = "party",
-    difficulty = "challenge",
+    difficulty = "challenge"
   },
   [9] = {
     size = "fortyman",
-    difficulty = "normal",
+    difficulty = "normal"
   },
   [11] = {
     size = "scenario",
-    difficulty = "heroic",
+    difficulty = "heroic"
   },
   [12] = {
     size = "scenario",
-    difficulty = "normal",
+    difficulty = "normal"
   },
   -- 13 is unused
   [14] = {
     size = "flexible",
-    difficulty = "normal",
+    difficulty = "normal"
   },
   [15] = {
     size = "flexible",
-    difficulty = "heroic",
+    difficulty = "heroic"
   },
   [16] = {
     size = "twenty",
-    difficulty = "mythic",
+    difficulty = "mythic"
   },
   [17] = {
     size = "flexible",
-    difficulty = "lfr",
+    difficulty = "lfr"
   },
   [23] = {
     size = "party",
-    difficulty = "mythic",
+    difficulty = "mythic"
   },
   [24] = {
     size = "party",
-    difficulty = "timewalking",
+    difficulty = "timewalking"
   },
   [33] = {
     size = "flexible",
-    difficulty = "timewalking",
-  },
+    difficulty = "timewalking"
+  }
 }
 
 WeakAuras.glow_types = {
   ACShine = L["Autocast Shine"],
   Pixel = L["Pixel Glow"],
-  buttonOverlay = L["Action Button Glow"],
+  buttonOverlay = L["Action Button Glow"]
 }
 
 WeakAuras.font_sizes = {
   small = L["Small"],
   medium = L["Medium"],
-  large = L["Large"],
+  large = L["Large"]
 }
 
 -- unitIds registerable with RegisterUnitEvent
 WeakAuras.baseUnitId = {
-  ["player"] = true,
-  ["target"] = true,
-  ["pet"] = true,
-  ["focus"] = true,
-  ["vehicle"] = true
+  player = true,
+  target = true,
+  pet = true,
+  focus = true,
+  vehicle = true
 }
 
 WeakAuras.multiUnitId = {
-  ["nameplate"] = true,
-  ["boss"] = true,
-  ["arena"] = true,
-  ["group"] = true,
+  nameplate = true,
+  boss = true,
+  arena = true,
+  group = true
 }
 
 for i = 1, 4 do
-  WeakAuras.baseUnitId["party"..i] = true
-  WeakAuras.baseUnitId["partypet"..i] = true
+  WeakAuras.baseUnitId["party" .. i] = true
+  WeakAuras.baseUnitId["partypet" .. i] = true
 end
 
 if not WeakAuras.IsClassic() then
   for i = 1, 5 do
-    WeakAuras.baseUnitId["arena"..i] = true
-    WeakAuras.baseUnitId["boss"..i] = true
+    WeakAuras.baseUnitId["arena" .. i] = true
+    WeakAuras.baseUnitId["boss" .. i] = true
   end
 end
 
 for i = 1, 40 do
-  WeakAuras.baseUnitId["raid"..i] = true
-  WeakAuras.baseUnitId["raidpet"..i] = true
-  WeakAuras.baseUnitId["nameplate"..i] = true
+  WeakAuras.baseUnitId["raid" .. i] = true
+  WeakAuras.baseUnitId["raidpet" .. i] = true
+  WeakAuras.baseUnitId["nameplate" .. i] = true
 end
 
 WeakAuras.dbm_types = {
@@ -2193,22 +2497,22 @@ WeakAuras.dbm_types = {
 WeakAuras.weapon_enchant_types = {
   showOnActive = L["Enchant Found"],
   showOnMissing = L["Enchant Missing"],
-  showAlways = L["Always"],
+  showAlways = L["Always"]
 }
 
 WeakAuras.EJIcons = {
-  tank =      "|TInterface\\EncounterJournal\\UI-EJ-Icons:::::256:64:7:25:7:25|t",
-  dps =       "|TInterface\\EncounterJournal\\UI-EJ-Icons:::::256:64:39:57:7:25|t",
-  healer =    "|TInterface\\EncounterJournal\\UI-EJ-Icons:::::256:64:71:89:7:25|t",
-  mythic =    "|TInterface\\EncounterJournal\\UI-EJ-Icons:::::256:64:103:121:7:25|t",
-  deadly =    "|TInterface\\EncounterJournal\\UI-EJ-Icons:::::256:64:135:153:7:25|t",
+  tank = "|TInterface\\EncounterJournal\\UI-EJ-Icons:::::256:64:7:25:7:25|t",
+  dps = "|TInterface\\EncounterJournal\\UI-EJ-Icons:::::256:64:39:57:7:25|t",
+  healer = "|TInterface\\EncounterJournal\\UI-EJ-Icons:::::256:64:71:89:7:25|t",
+  mythic = "|TInterface\\EncounterJournal\\UI-EJ-Icons:::::256:64:103:121:7:25|t",
+  deadly = "|TInterface\\EncounterJournal\\UI-EJ-Icons:::::256:64:135:153:7:25|t",
   important = "|TInterface\\EncounterJournal\\UI-EJ-Icons:::::256:64:167:185:7:25|t",
   interrupt = "|TInterface\\EncounterJournal\\UI-EJ-Icons:::::256:64:199:217:7:25|t",
-  magic =     "|TInterface\\EncounterJournal\\UI-EJ-Icons:::::256:64:231:249:7:25|t",
-  curse =     "|TInterface\\EncounterJournal\\UI-EJ-Icons:::::256:64:7:25:39:57|t",
-  poison =    "|TInterface\\EncounterJournal\\UI-EJ-Icons:::::256:64:39:57:39:57|t",
-  disease =   "|TInterface\\EncounterJournal\\UI-EJ-Icons:::::256:64:71:89:39:57|t",
-  enrage =    "|TInterface\\EncounterJournal\\UI-EJ-Icons:::::256:64:103:121:39:57|t",
+  magic = "|TInterface\\EncounterJournal\\UI-EJ-Icons:::::256:64:231:249:7:25|t",
+  curse = "|TInterface\\EncounterJournal\\UI-EJ-Icons:::::256:64:7:25:39:57|t",
+  poison = "|TInterface\\EncounterJournal\\UI-EJ-Icons:::::256:64:39:57:39:57|t",
+  disease = "|TInterface\\EncounterJournal\\UI-EJ-Icons:::::256:64:71:89:39:57|t",
+  enrage = "|TInterface\\EncounterJournal\\UI-EJ-Icons:::::256:64:103:121:39:57|t"
 }
 
 WeakAuras.reset_swing_spells = {}
@@ -2218,7 +2522,7 @@ WeakAuras.reset_ranged_swing_spells = {
   [7918] = true, -- Shoot Gun
   [2764] = true, -- Throw
   [5019] = true, -- Shoot Wands
-  [75] = true, -- Auto Shot
+  [75] = true -- Auto Shot
 }
 
 if WeakAuras.IsClassic() then
@@ -2235,13 +2539,42 @@ if WeakAuras.IsClassic() then
   WeakAuras.item_slot_types[17] = SECONDARYHANDSLOT
   WeakAuras.item_slot_types[18] = RANGEDSLOT
 
-  local reset_swing_spell_list = {
-    1464, 8820, 11604, 11605, -- Slam
-    78, 284, 285, 1608, 11564, 11565, 11566, 11567, 25286, -- Heroic Strike
-    845, 7369, 11608, 11609, 20569, -- Cleave
-    2973, 14260, 14261, 14262, 14263, 14264, 14265, 14266, -- Raptor Strike
-    6807, 6808, 6809, 8972, 9745, 9880, 9881, -- Maul
-    20549, -- War Stomp
+  local reset_swing_spell_list
+  = {
+    1464,
+    8820,
+    11604,
+    11605, -- Slam
+    78,
+    284,
+    285,
+    1608,
+    11564,
+    11565,
+    11566,
+    11567,
+    25286, -- Heroic Strike
+    845,
+    7369,
+    11608,
+    11609,
+    20569, -- Cleave
+    2973,
+    14260,
+    14261,
+    14262,
+    14263,
+    14264,
+    14265,
+    14266, -- Raptor Strike
+    6807,
+    6808,
+    6809,
+    8972,
+    9745,
+    9880,
+    9881, -- Maul
+    20549 -- War Stomp
   }
   for i, spellid in ipairs(reset_swing_spell_list) do
     WeakAuras.reset_swing_spells[spellid] = true

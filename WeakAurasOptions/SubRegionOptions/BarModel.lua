@@ -1,31 +1,50 @@
 if not WeakAuras.IsCorrectVersion() then return end
 
-local SharedMedia = LibStub("LibSharedMedia-3.0");
-local L = WeakAuras.L;
+local SharedMedia = LibStub("LibSharedMedia-3.0")
+local L = WeakAuras.L
 
 if WeakAuras.IsClassic() then return end -- Models disabled for classic
-
 local function createOptions(parentData, data, index, subIndex)
   local options = {
     __title = L["Model %s"]:format(subIndex),
     __order = 1,
     __up = function()
-      if (WeakAuras.ApplyToDataOrChildData(parentData, WeakAuras.MoveSubRegionUp, index, "subbarmodel")) then
+      if WeakAuras.ApplyToDataOrChildData(
+        parentData,
+        WeakAuras.MoveSubRegionUp,
+        index,
+        "subbarmodel"
+      ) then
         WeakAuras.ReloadOptions2(parentData.id, parentData)
       end
     end,
     __down = function()
-      if (WeakAuras.ApplyToDataOrChildData(parentData, WeakAuras.MoveSubRegionDown, index, "subbarmodel")) then
+      if WeakAuras.ApplyToDataOrChildData(
+        parentData,
+        WeakAuras.MoveSubRegionDown,
+        index,
+        "subbarmodel"
+      ) then
         WeakAuras.ReloadOptions2(parentData.id, parentData)
       end
     end,
     __duplicate = function()
-      if (WeakAuras.ApplyToDataOrChildData(parentData, WeakAuras.DuplicateSubRegion, index, "subbarmodel")) then
+      if WeakAuras.ApplyToDataOrChildData(
+        parentData,
+        WeakAuras.DuplicateSubRegion,
+        index,
+        "subbarmodel"
+      ) then
         WeakAuras.ReloadOptions2(parentData.id, parentData)
       end
     end,
     __delete = function()
-      if (WeakAuras.ApplyToDataOrChildData(parentData, WeakAuras.DeleteSubRegion, index, "subbarmodel")) then
+      if WeakAuras.ApplyToDataOrChildData(
+        parentData,
+        WeakAuras.DeleteSubRegion,
+        index,
+        "subbarmodel"
+      ) then
         WeakAuras.ReloadOptions2(parentData.id, parentData)
       end
     end,
@@ -33,28 +52,28 @@ local function createOptions(parentData, data, index, subIndex)
       type = "toggle",
       width = WeakAuras.doubleWidth,
       name = L["Show Model"],
-      order = 9,
+      order = 9
     },
     model_fileId = {
       type = "input",
       width = WeakAuras.normalWidth,
       name = L["Model"],
-      order =  10
+      order = 10
     },
     chooseModel = {
       type = "execute",
       width = WeakAuras.normalWidth,
       name = L["Choose"],
-      order =  11,
+      order = 11,
       func = function()
-        WeakAuras.OpenModelPicker(data, parentData);
-      end,
+        WeakAuras.OpenModelPicker(data, parentData)
+      end
     },
     bar_model_clip = {
       type = "toggle",
       width = WeakAuras.normalWidth,
       name = L["Clipped by Progress"],
-      order = 12,
+      order = 12
     },
     bar_model_alpha = {
       type = "range",
@@ -80,7 +99,9 @@ local function createOptions(parentData, data, index, subIndex)
       step = .001,
       bigStep = 0.05,
       order = 20,
-      hidden = function() return data.api end
+      hidden = function()
+        return data.api
+      end
     },
     model_x = {
       type = "range",
@@ -91,7 +112,9 @@ local function createOptions(parentData, data, index, subIndex)
       step = .001,
       bigStep = 0.05,
       order = 30,
-      hidden = function() return data.api end
+      hidden = function()
+        return data.api
+      end
     },
     model_y = {
       type = "range",
@@ -102,7 +125,9 @@ local function createOptions(parentData, data, index, subIndex)
       step = .001,
       bigStep = 0.05,
       order = 40,
-      hidden = function() return data.api end
+      hidden = function()
+        return data.api
+      end
     },
     rotation = {
       type = "range",
@@ -113,7 +138,9 @@ local function createOptions(parentData, data, index, subIndex)
       step = 1,
       bigStep = 3,
       order = 45,
-      hidden = function() return data.api end
+      hidden = function()
+        return data.api
+      end
     },
     -- New Settings
     model_st_tx = {
@@ -125,7 +152,9 @@ local function createOptions(parentData, data, index, subIndex)
       step = 1,
       bigStep = 5,
       order = 20,
-      hidden = function() return not data.api end
+      hidden = function()
+        return not data.api
+      end
     },
     model_st_ty = {
       type = "range",
@@ -136,7 +165,9 @@ local function createOptions(parentData, data, index, subIndex)
       step = 1,
       bigStep = 5,
       order = 21,
-      hidden = function() return not data.api end
+      hidden = function()
+        return not data.api
+      end
     },
     model_st_tz = {
       type = "range",
@@ -147,7 +178,9 @@ local function createOptions(parentData, data, index, subIndex)
       step = 1,
       bigStep = 5,
       order = 22,
-      hidden = function() return not data.api end
+      hidden = function()
+        return not data.api
+      end
     },
     model_st_rx = {
       type = "range",
@@ -158,7 +191,9 @@ local function createOptions(parentData, data, index, subIndex)
       step = 1,
       bigStep = 3,
       order = 23,
-      hidden = function() return not data.api end
+      hidden = function()
+        return not data.api
+      end
     },
     model_st_ry = {
       type = "range",
@@ -169,7 +204,9 @@ local function createOptions(parentData, data, index, subIndex)
       step = 1,
       bigStep = 3,
       order = 24,
-      hidden = function() return not data.api end
+      hidden = function()
+        return not data.api
+      end
     },
     model_st_rz = {
       type = "range",
@@ -180,7 +217,9 @@ local function createOptions(parentData, data, index, subIndex)
       step = 1,
       bigStep = 3,
       order = 25,
-      hidden = function() return not data.api end
+      hidden = function()
+        return not data.api
+      end
     },
     model_st_us = {
       type = "range",
@@ -191,10 +230,16 @@ local function createOptions(parentData, data, index, subIndex)
       step = 0.1,
       bigStep = 5,
       order = 26,
-      hidden = function() return not data.api end
-    },
+      hidden = function()
+        return not data.api
+      end
+    }
   }
   return options
 end
 
-WeakAuras.RegisterSubRegionOptions("subbarmodel", createOptions, L["Shows a model"]);
+WeakAuras.RegisterSubRegionOptions(
+  "subbarmodel",
+  createOptions,
+  L["Shows a model"]
+)

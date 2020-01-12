@@ -1,8 +1,7 @@
 if not WeakAuras.IsCorrectVersion() then return end
 
-local L = WeakAuras.L;
+local L = WeakAuras.L
 if WeakAuras.IsClassic() then return end -- Models disabled for classic
-
 local function createOptions(id, data)
   local options = {
     __title = L["Model Settings"],
@@ -12,7 +11,9 @@ local function createOptions(id, data)
       width = WeakAuras.normalWidth,
       name = L["Show model of unit "],
       order = 0.5,
-      hidden = function() return data.modelDisplayInfo and WeakAuras.BuildInfo > 80100 end
+      hidden = function()
+        return data.modelDisplayInfo and WeakAuras.BuildInfo > 80100
+      end
     },
     -- Option for modelIsDisplayInfo added below
 
@@ -22,8 +23,12 @@ local function createOptions(id, data)
       width = WeakAuras.normalWidth,
       name = "",
       order = 1.5,
-      image = function() return "", 0, 0 end,
-      hidden = function() return data.modelIsUnit end
+      image = function()
+        return "", 0, 0
+      end,
+      hidden = function()
+        return data.modelIsUnit
+      end
     },
     chooseModel = {
       type = "execute",
@@ -31,15 +36,17 @@ local function createOptions(id, data)
       name = L["Choose"],
       order = 2,
       func = function()
-        WeakAuras.OpenModelPicker(data);
+        WeakAuras.OpenModelPicker(data)
       end,
-      hidden = function() return data.modelIsUnit end
+      hidden = function()
+        return data.modelIsUnit
+      end
     },
     advance = {
       type = "toggle",
       width = WeakAuras.normalWidth,
       name = L["Animate"],
-      order = 5,
+      order = 5
     },
     sequence = {
       type = "range",
@@ -50,7 +57,9 @@ local function createOptions(id, data)
       step = 1,
       bigStep = 1,
       order = 6,
-      disabled = function() return not data.advance end
+      disabled = function()
+        return not data.advance
+      end
     },
     api = {
       type = "toggle",
@@ -62,7 +71,7 @@ local function createOptions(id, data)
       type = "toggle",
       width = WeakAuras.normalWidth,
       name = L["Portrait Zoom"],
-      order = 8,
+      order = 8
     },
     -- old settings
     model_z = {
@@ -74,7 +83,9 @@ local function createOptions(id, data)
       step = .001,
       bigStep = 0.05,
       order = 20,
-      hidden = function() return data.api end
+      hidden = function()
+        return data.api
+      end
     },
     model_x = {
       type = "range",
@@ -85,7 +96,9 @@ local function createOptions(id, data)
       step = .001,
       bigStep = 0.05,
       order = 30,
-      hidden = function() return data.api end
+      hidden = function()
+        return data.api
+      end
     },
     model_y = {
       type = "range",
@@ -96,7 +109,9 @@ local function createOptions(id, data)
       step = .001,
       bigStep = 0.05,
       order = 40,
-      hidden = function() return data.api end
+      hidden = function()
+        return data.api
+      end
     },
     rotation = {
       type = "range",
@@ -107,7 +122,9 @@ local function createOptions(id, data)
       step = 1,
       bigStep = 3,
       order = 45,
-      hidden = function() return data.api end
+      hidden = function()
+        return data.api
+      end
     },
     -- New Settings
     model_st_tx = {
@@ -119,7 +136,9 @@ local function createOptions(id, data)
       step = 1,
       bigStep = 5,
       order = 20,
-      hidden = function() return not data.api end
+      hidden = function()
+        return not data.api
+      end
     },
     model_st_ty = {
       type = "range",
@@ -130,7 +149,9 @@ local function createOptions(id, data)
       step = 1,
       bigStep = 5,
       order = 21,
-      hidden = function() return not data.api end
+      hidden = function()
+        return not data.api
+      end
     },
     model_st_tz = {
       type = "range",
@@ -141,7 +162,9 @@ local function createOptions(id, data)
       step = 1,
       bigStep = 5,
       order = 22,
-      hidden = function() return not data.api end
+      hidden = function()
+        return not data.api
+      end
     },
     model_st_rx = {
       type = "range",
@@ -152,7 +175,9 @@ local function createOptions(id, data)
       step = 1,
       bigStep = 3,
       order = 23,
-      hidden = function() return not data.api end
+      hidden = function()
+        return not data.api
+      end
     },
     model_st_ry = {
       type = "range",
@@ -163,7 +188,9 @@ local function createOptions(id, data)
       step = 1,
       bigStep = 3,
       order = 24,
-      hidden = function() return not data.api end
+      hidden = function()
+        return not data.api
+      end
     },
     model_st_rz = {
       type = "range",
@@ -174,7 +201,9 @@ local function createOptions(id, data)
       step = 1,
       bigStep = 3,
       order = 25,
-      hidden = function() return not data.api end
+      hidden = function()
+        return not data.api
+      end
     },
     model_st_us = {
       type = "range",
@@ -185,14 +214,16 @@ local function createOptions(id, data)
       step = 0.1,
       bigStep = 5,
       order = 26,
-      hidden = function() return not data.api end
+      hidden = function()
+        return not data.api
+      end
     },
     endHeader = {
       type = "header",
       order = 100,
-      name = "",
-    },
-  };
+      name = ""
+    }
+  }
 
   if WeakAuras.BuildInfo > 80100 then
     options.modelDisplayInfo = {
@@ -200,7 +231,9 @@ local function createOptions(id, data)
       width = WeakAuras.normalWidth,
       name = L["Use Display Info Id"],
       order = 0.6,
-      hidden = function() return data.modelIsUnit end
+      hidden = function()
+        return data.modelIsUnit
+      end
     }
     options.model_fileId = {
       type = "input",
@@ -223,25 +256,25 @@ local function createOptions(id, data)
 
   return {
     model = options,
-    position = WeakAuras.PositionOptions(id, data, nil, nil, nil),
-  };
+    position = WeakAuras.PositionOptions(id, data, nil, nil, nil)
+  }
 end
 
 local function createThumbnail()
-  local borderframe = CreateFrame("FRAME", nil, UIParent);
-  borderframe:SetWidth(32);
-  borderframe:SetHeight(32);
+  local borderframe = CreateFrame("FRAME", nil, UIParent)
+  borderframe:SetWidth(32)
+  borderframe:SetHeight(32)
 
-  local border = borderframe:CreateTexture(nil, "Overlay");
-  border:SetAllPoints(borderframe);
-  border:SetTexture("Interface\\BUTTONS\\UI-Quickslot2.blp");
-  border:SetTexCoord(0.2, 0.8, 0.2, 0.8);
+  local border = borderframe:CreateTexture(nil, "Overlay")
+  border:SetAllPoints(borderframe)
+  border:SetTexture("Interface\\BUTTONS\\UI-Quickslot2.blp")
+  border:SetTexCoord(0.2, 0.8, 0.2, 0.8)
 
-  local model = CreateFrame("PlayerModel", nil, borderframe);
-  borderframe.model = model;
-  model:SetFrameStrata("FULLSCREEN");
+  local model = CreateFrame("PlayerModel", nil, borderframe)
+  borderframe.model = model
+  model:SetFrameStrata("FULLSCREEN")
 
-  return borderframe;
+  return borderframe
 end
 
 local function modifyThumbnail(parent, region, data)
@@ -249,33 +282,57 @@ local function modifyThumbnail(parent, region, data)
 
   local model = region.model
 
-  model:SetAllPoints(region);
-  model:SetFrameStrata(region:GetParent():GetFrameStrata());
-  model:SetWidth(region:GetWidth() - 2);
-  model:SetHeight(region:GetHeight() - 2);
-  model:SetPoint("center", region, "center");
-  WeakAuras.SetModel(model, data.model_path, data.model_fileId, data.modelIsUnit, data.modelDisplayInfo)
+  model:SetAllPoints(region)
+  model:SetFrameStrata(region:GetParent():GetFrameStrata())
+  model:SetWidth(region:GetWidth() - 2)
+  model:SetHeight(region:GetHeight() - 2)
+  model:SetPoint("center", region, "center")
+  WeakAuras.SetModel(
+    model,
+    data.model_path,
+    data.model_fileId,
+    data.modelIsUnit,
+    data.modelDisplayInfo
+  )
   model:SetScript("OnShow", function()
-    WeakAuras.SetModel(model, data.model_path, data.model_fileId, data.modelIsUnit, data.modelDisplayInfo)
+    WeakAuras.SetModel(
+      model,
+      data.model_path,
+      data.model_fileId,
+      data.modelIsUnit,
+      data.modelDisplayInfo
+    )
     model:SetPortraitZoom(data.portraitZoom and 1 or 0)
-    if (data.api) then
-      model:SetTransform(data.model_st_tx / 1000, data.model_st_ty / 1000, data.model_st_tz / 1000,
-        rad(data.model_st_rx), rad(data.model_st_ry), rad(data.model_st_rz),
-        data.model_st_us / 1000);
+    if data.api then
+      model:SetTransform(
+        data.model_st_tx / 1000,
+        data.model_st_ty / 1000,
+        data.model_st_tz / 1000,
+        rad(data.model_st_rx),
+        rad(data.model_st_ry),
+        rad(data.model_st_rz),
+        data.model_st_us / 1000
+      )
     else
-      model:ClearTransform();
-      model:SetPosition(data.model_z, data.model_x, data.model_y);
-      model:SetFacing(rad(data.rotation));
+      model:ClearTransform()
+      model:SetPosition(data.model_z, data.model_x, data.model_y)
+      model:SetFacing(rad(data.rotation))
     end
-  end);
+  end)
 
-  if (data.api) then
-    model:SetTransform(data.model_st_tx / 1000, data.model_st_ty / 1000, data.model_st_tz / 1000,
-      rad(data.model_st_rx), rad(data.model_st_ry), rad(data.model_st_rz),
-      data.model_st_us / 1000);
+  if data.api then
+    model:SetTransform(
+      data.model_st_tx / 1000,
+      data.model_st_ty / 1000,
+      data.model_st_tz / 1000,
+      rad(data.model_st_rx),
+      rad(data.model_st_ry),
+      rad(data.model_st_rz),
+      data.model_st_us / 1000
+    )
   else
-    model:SetPosition(data.model_z, data.model_x, data.model_y);
-    model:SetFacing(rad(data.rotation));
+    model:SetPosition(data.model_z, data.model_x, data.model_y)
+    model:SetFacing(rad(data.rotation))
   end
 end
 
@@ -293,123 +350,121 @@ local function createIcon()
     scale = 1,
     height = 40,
     width = 40
-  };
+  }
 
-  local thumbnail = createThumbnail(UIParent);
-  modifyThumbnail(UIParent, thumbnail, data, nil, 50);
+  local thumbnail = createThumbnail(UIParent)
+  modifyThumbnail(UIParent, thumbnail, data, nil, 50)
 
-  return thumbnail;
+  return thumbnail
 end
 
-local templates = {
-  {
-    title = L["Default"],
-    data = {
-    };
-  },
-  {
-    title = L["Fire Orb"],
-    description = "",
-    data = {
-      width = 100,
-      height = 100,
-      model_path = "spells/6fx_smallfire.m2",
-      model_fileId = "937416", -- spells/6fx_smallfire.m2
-      model_x = 0,
-      model_y = -0.5,
-      model_z = -1.5
-    },
-  },
-  {
-    title = L["Blue Sparkle Orb"],
-    description = "",
-    data = {
-      width = 100,
-      height = 100,
-      advance = true,
-      sequence = 1,
-      model_path = "spells/7fx_druid_halfmoon_missile.m2",
-      model_fileId = "1322288", -- spells/7fx_druid_halfmoon_missile.m2
-      model_x = 0,
-      model_y = 0.7,
-      model_z = 1.5
-    },
-  },
-  {
-    title = L["Arcane Orb"],
-    description = "",
-    data = {
-      width = 100,
-      height = 100,
-      advance = true,
-      sequence = 1,
-      model_path = "spells/proc_arcane_impact_low.m2",
-      model_fileId = "1042743", -- spells/proc_arcane_impact_low.m2
-      model_x = 0,
-      model_y = 0.8,
-      model_z = 2
-    },
-  },
-  {
-    title = L["Orange Rune"],
-    description = "",
-    data = {
-      width = 100,
-      height = 100,
-      advance = true,
-      sequence = 1,
-      model_path = "spells/7fx_godking_orangerune_state.m2",
-      model_fileId = "1307356", -- spells/7fx_godking_orangerune_state.m2
-    },
-  },
-  {
-    title = L["Blue Rune"],
-    description = "",
-    data = {
-      width = 100,
-      height = 100,
-      advance = true,
-      sequence = 1,
-      model_path = "spells/7fx_godking_bluerune_state.m2",
-      model_fileId = "1307354", -- spells/7fx_godking_bluerune_state.m2
-    }
-  },
-  {
-    title = L["Yellow Rune"],
-    description = "",
-    data = {
-      width = 100,
-      height = 100,
-      advance = true,
-      sequence = 1,
-      model_path = "spells/7fx_godking_yellowrune_state.m2",
-      model_fileId = "1307358", -- spells/7fx_godking_yellowrune_state.m2
-    }
-  },
-  {
-    title = L["Purple Rune"],
-    description = "",
-    data = {
-      width = 100,
-      height = 100,
-      advance = true,
-      sequence = 1,
-      model_path = "spells/7fx_godking_purplerune_state.m2",
-      model_fileId = "1307355", -- spells/7fx_godking_purplerune_state.m2
-    }
-  },
-  {
-    title = L["Green Rune"],
-    description = "",
-    data = {
-      width = 100,
-      height = 100,
-      advance = true,
-      sequence = 1,
-      model_path = "spells/7fx_godking_greenrune_state.m2",
-      model_fileId = "1307357", -- spells/7fx_godking_greenrune_state.m2
-    }
-  },
-}
+local templates = { {
+  title = L["Default"],
+  data = {}
+}, {
+  title = L["Fire Orb"],
+  description = "",
+  data = {
+    width = 100,
+    height = 100,
+    model_path = "spells/6fx_smallfire.m2",
+    model_fileId = "937416", -- spells/6fx_smallfire.m2
+    model_x = 0,
+    model_y = -0.5,
+    model_z = -1.5
+  }
+}, {
+  title = L["Blue Sparkle Orb"],
+  description = "",
+  data = {
+    width = 100,
+    height = 100,
+    advance = true,
+    sequence = 1,
+    model_path = "spells/7fx_druid_halfmoon_missile.m2",
+    model_fileId = "1322288", -- spells/7fx_druid_halfmoon_missile.m2
+    model_x = 0,
+    model_y = 0.7,
+    model_z = 1.5
+  }
+}, {
+  title = L["Arcane Orb"],
+  description = "",
+  data = {
+    width = 100,
+    height = 100,
+    advance = true,
+    sequence = 1,
+    model_path = "spells/proc_arcane_impact_low.m2",
+    model_fileId = "1042743", -- spells/proc_arcane_impact_low.m2
+    model_x = 0,
+    model_y = 0.8,
+    model_z = 2
+  }
+}, {
+  title = L["Orange Rune"],
+  description = "",
+  data = {
+    width = 100,
+    height = 100,
+    advance = true,
+    sequence = 1,
+    model_path = "spells/7fx_godking_orangerune_state.m2",
+    model_fileId = "1307356" -- spells/7fx_godking_orangerune_state.m2
+  }
+}, {
+  title = L["Blue Rune"],
+  description = "",
+  data = {
+    width = 100,
+    height = 100,
+    advance = true,
+    sequence = 1,
+    model_path = "spells/7fx_godking_bluerune_state.m2",
+    model_fileId = "1307354" -- spells/7fx_godking_bluerune_state.m2
+  }
+}, {
+  title = L["Yellow Rune"],
+  description = "",
+  data = {
+    width = 100,
+    height = 100,
+    advance = true,
+    sequence = 1,
+    model_path = "spells/7fx_godking_yellowrune_state.m2",
+    model_fileId = "1307358" -- spells/7fx_godking_yellowrune_state.m2
+  }
+}, {
+  title = L["Purple Rune"],
+  description = "",
+  data = {
+    width = 100,
+    height = 100,
+    advance = true,
+    sequence = 1,
+    model_path = "spells/7fx_godking_purplerune_state.m2",
+    model_fileId = "1307355" -- spells/7fx_godking_purplerune_state.m2
+  }
+}, {
+  title = L["Green Rune"],
+  description = "",
+  data = {
+    width = 100,
+    height = 100,
+    advance = true,
+    sequence = 1,
+    model_path = "spells/7fx_godking_greenrune_state.m2",
+    model_fileId = "1307357" -- spells/7fx_godking_greenrune_state.m2
+  }
+} }
 
-WeakAuras.RegisterRegionOptions("model", createOptions, createIcon, L["Model"], createThumbnail, modifyThumbnail, L["Shows a 3D model from the game files"], templates);
+WeakAuras.RegisterRegionOptions(
+  "model",
+  createOptions,
+  createIcon,
+  L["Model"],
+  createThumbnail,
+  modifyThumbnail,
+  L["Shows a 3D model from the game files"],
+  templates
+)

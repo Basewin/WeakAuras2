@@ -16,43 +16,43 @@ local L = WeakAuras.L
 
 local textEditor
 
-local valueFromPath = WeakAuras.ValueFromPath;
-local valueToPath = WeakAuras.ValueToPath;
+local valueFromPath = WeakAuras.ValueFromPath
+local valueToPath = WeakAuras.ValueToPath
 
 local editor_themes = {
-  ["Standard"] = {
-    ["Table"] = "|c00ff3333",
-    ["Arithmetic"] = "|c00ff3333",
-    ["Relational"] = "|c00ff3333",
-    ["Logical"] = "|c004444ff",
-    ["Special"] = "|c00ff3333",
-    ["Keyword"] =  "|c004444ff",
-    ["Comment"] = "|c0000aa00",
-    ["Number"] = "|c00ff9900",
-    ["String"] = "|c00999999"
+  Standard = {
+    Table = "|c00ff3333",
+    Arithmetic = "|c00ff3333",
+    Relational = "|c00ff3333",
+    Logical = "|c004444ff",
+    Special = "|c00ff3333",
+    Keyword = "|c004444ff",
+    Comment = "|c0000aa00",
+    Number = "|c00ff9900",
+    String = "|c00999999"
   },
-  ["Monokai"] = {
-    ["Table"] = "|c00ffffff",
-    ["Arithmetic"] = "|c00f92672",
-    ["Relational"] = "|c00ff3333",
-    ["Logical"] = "|c00f92672",
-    ["Special"] = "|c0066d9ef",
-    ["Keyword"] =  "|c00f92672",
-    ["Comment"] = "|c0075715e",
-    ["Number"] = "|c00ae81ff",
-    ["String"] = "|c00e6db74"
+  Monokai = {
+    Table = "|c00ffffff",
+    Arithmetic = "|c00f92672",
+    Relational = "|c00ff3333",
+    Logical = "|c00f92672",
+    Special = "|c0066d9ef",
+    Keyword = "|c00f92672",
+    Comment = "|c0075715e",
+    Number = "|c00ae81ff",
+    String = "|c00e6db74"
   },
-  ["Obsidian"] = {
-    ["Table"] = "|c00AFC0E5",
-    ["Arithmetic"] = "|c00E0E2E4",
-    ["Relational"] = "|c00B3B689",
-    ["Logical"] = "|c0093C763",
-    ["Special"] = "|c00AFC0E5",
-    ["Keyword"] =  "|c0093C763",
-    ["Comment"] = "|c0066747B",
-    ["Number"] = "|c00FFCD22",
-    ["String"] = "|c00EC7600"
-  },
+  Obsidian = {
+    Table = "|c00AFC0E5",
+    Arithmetic = "|c00E0E2E4",
+    Relational = "|c00B3B689",
+    Logical = "|c0093C763",
+    Special = "|c00AFC0E5",
+    Keyword = "|c0093C763",
+    Comment = "|c0066747B",
+    Number = "|c00FFCD22",
+    String = "|c00EC7600"
+  }
 }
 
 local color_scheme = { [0] = "|r" }
@@ -115,82 +115,97 @@ local function settings_dropdown_initialize(frame, level, menu)
       return WeakAurasSaved.editor_bracket_matching
     end,
     func = function()
-      WeakAurasSaved.editor_bracket_matching = not WeakAurasSaved.editor_bracket_matching
+      WeakAurasSaved.editor_bracket_matching =
+        not WeakAurasSaved.editor_bracket_matching
     end
   })
 end
 
 local function ConstructTextEditor(frame)
-  local group = AceGUI:Create("InlineGroup");
-  group.frame:SetParent(frame);
-  group.frame:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -17, 12);
-  group.frame:SetPoint("TOPLEFT", frame, "TOPLEFT", 17, -10);
-  group.frame:Hide();
-  group:SetLayout("fill");
+  local group = AceGUI:Create("InlineGroup")
+  group.frame:SetParent(frame)
+  group.frame:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -17, 12)
+  group.frame:SetPoint("TOPLEFT", frame, "TOPLEFT", 17, -10)
+  group.frame:Hide()
+  group:SetLayout("fill")
 
-  local editor = AceGUI:Create("MultiLineEditBox");
-  editor:SetWidth(400);
-  editor.button:Hide();
-  local fontPath = SharedMedia:Fetch("font", "Fira Mono Medium");
-  if(fontPath) then
-    editor.editBox:SetFont(fontPath, 12);
+  local editor = AceGUI:Create("MultiLineEditBox")
+  editor:SetWidth(400)
+  editor.button:Hide()
+  local fontPath = SharedMedia:Fetch("font", "Fira Mono Medium")
+  if fontPath then
+    editor.editBox:SetFont(fontPath, 12)
   end
-  group:AddChild(editor);
-  editor.frame:SetClipsChildren(true);
+  group:AddChild(editor)
+  editor.frame:SetClipsChildren(true)
 
   -- The indention lib overrides GetText, but for the line number
   -- display we ned the original, so save it here.
-  local originalGetText = editor.editBox.GetText;
+  local originalGetText = editor.editBox.GetText
   set_scheme()
   IndentationLib.enable(editor.editBox, color_scheme, 4)
 
-  local cancel = CreateFrame("Button", nil, group.frame, "UIPanelButtonTemplate");
-  cancel:SetScript("OnClick", function() group:CancelClose() end);
-  cancel:SetPoint("BOTTOMRIGHT", -27, 13);
+  local cancel =
+    CreateFrame("Button", nil, group.frame, "UIPanelButtonTemplate")
+  cancel:SetScript("OnClick", function()
+    group:CancelClose()
+  end)
+  cancel:SetPoint("BOTTOMRIGHT", -27, 13)
   cancel:SetFrameLevel(cancel:GetFrameLevel() + 1)
-  cancel:SetHeight(20);
-  cancel:SetWidth(100);
-  cancel:SetText(L["Cancel"]);
+  cancel:SetHeight(20)
+  cancel:SetWidth(100)
+  cancel:SetText(L["Cancel"])
 
-  local close = CreateFrame("Button", nil, group.frame, "UIPanelButtonTemplate");
-  close:SetScript("OnClick", function() group:Close() end);
+  local close = CreateFrame("Button", nil, group.frame, "UIPanelButtonTemplate")
+  close:SetScript("OnClick", function()
+    group:Close()
+  end)
   close:SetPoint("RIGHT", cancel, "LEFT", -10, 0)
   close:SetFrameLevel(close:GetFrameLevel() + 1)
-  close:SetHeight(20);
-  close:SetWidth(100);
-  close:SetText(L["Done"]);
+  close:SetHeight(20)
+  close:SetWidth(100)
+  close:SetText(L["Done"])
 
-  local settings_frame = CreateFrame("Button", "WASettingsButton", close, "UIPanelButtonTemplate")
+  local settings_frame =
+    CreateFrame("Button", "WASettingsButton", close, "UIPanelButtonTemplate")
   settings_frame:SetPoint("RIGHT", close, "LEFT", -10, 0)
   settings_frame:SetHeight(20)
   settings_frame:SetWidth(100)
   settings_frame:SetText(L["Settings"])
   settings_frame:RegisterForClicks("LeftButtonUp")
 
-  local helpButton = CreateFrame("Button", nil, group.frame, "UIPanelButtonTemplate")
+  local helpButton =
+    CreateFrame("Button", nil, group.frame, "UIPanelButtonTemplate")
   helpButton:SetPoint("BOTTOMLEFT", 12, 13)
   helpButton:SetFrameLevel(cancel:GetFrameLevel() + 1)
-  helpButton:SetHeight(20);
-  helpButton:SetWidth(100);
-  helpButton:SetText(L["Help"]);
+  helpButton:SetHeight(20)
+  helpButton:SetWidth(100)
+  helpButton:SetText(L["Help"])
 
   local urlText = CreateFrame("editbox", nil, group.frame)
   urlText:SetFrameLevel(cancel:GetFrameLevel() + 1)
-  urlText:SetFont(STANDARD_TEXT_FONT, 12);
-  urlText:EnableMouse(true);
-  urlText:SetAutoFocus(false);
-  urlText:SetCountInvisibleLetters(false);
+  urlText:SetFont(STANDARD_TEXT_FONT, 12)
+  urlText:EnableMouse(true)
+  urlText:SetAutoFocus(false)
+  urlText:SetCountInvisibleLetters(false)
   urlText:Hide()
 
-  local urlCopyLabel = urlText:CreateFontString(nil, "BACKGROUND", "GameFontHighlightSmall");
+  local urlCopyLabel =
+    urlText:CreateFontString(nil, "BACKGROUND", "GameFontHighlightSmall")
   urlCopyLabel:SetPoint("BOTTOMLEFT", group.frame, "BOTTOMLEFT", 12, 18)
-  urlCopyLabel:SetText(L["Press Ctrl+C to copy"]);
+  urlCopyLabel:SetText(L["Press Ctrl+C to copy"])
   urlCopyLabel:Hide()
 
   urlText:SetPoint("TOPLEFT", urlCopyLabel, "TOPRIGHT", 12, 13)
   urlText:SetPoint("RIGHT", settings_frame, "LEFT")
 
-  local dropdown = CreateFrame("Frame", "SettingsMenuFrame", settings_frame, "UIDropDownMenuTemplate")
+  local dropdown =
+    CreateFrame(
+      "Frame",
+      "SettingsMenuFrame",
+      settings_frame,
+      "UIDropDownMenuTemplate"
+    )
   UIDropDownMenu_Initialize(dropdown, settings_dropdown_initialize, "MENU")
 
   settings_frame:SetScript("OnClick", function(self, button, down)
@@ -223,26 +238,28 @@ local function ConstructTextEditor(frame)
     end
   end)
 
-  local editorError = group.frame:CreateFontString(nil, "OVERLAY");
+  local editorError = group.frame:CreateFontString(nil, "OVERLAY")
   editorError:SetFont(STANDARD_TEXT_FONT, 12)
-  editorError:SetJustifyH("LEFT");
-  editorError:SetJustifyV("TOP");
-  editorError:SetTextColor(1, 0, 0);
-  editorError:SetPoint("LEFT", helpButton, "RIGHT", 0, 4);
-  editorError:SetPoint("RIGHT", close, "LEFT");
+  editorError:SetJustifyH("LEFT")
+  editorError:SetJustifyV("TOP")
+  editorError:SetTextColor(1, 0, 0)
+  editorError:SetPoint("LEFT", helpButton, "RIGHT", 0, 4)
+  editorError:SetPoint("RIGHT", close, "LEFT")
 
-  local editorLine = CreateFrame("Editbox", nil, group.frame);
+  local editorLine = CreateFrame("Editbox", nil, group.frame)
   -- Set script on enter pressed..
-  editorLine:SetPoint("BOTTOMRIGHT", editor.frame, "TOPRIGHT", -10, -15);
+  editorLine:SetPoint("BOTTOMRIGHT", editor.frame, "TOPRIGHT", -10, -15)
   editorLine:SetFont(STANDARD_TEXT_FONT, 10)
-  editorLine:SetJustifyH("RIGHT");
-  editorLine:SetWidth(80);
-  editorLine:SetHeight(20);
-  editorLine:SetNumeric(true);
-  editorLine:SetTextInsets(10, 10, 0, 0);
+  editorLine:SetJustifyH("RIGHT")
+  editorLine:SetWidth(80)
+  editorLine:SetHeight(20)
+  editorLine:SetNumeric(true)
+  editorLine:SetTextInsets(10, 10, 0, 0)
 
-
-  urlText:SetScript("OnChar", function(self) self:SetText(group.url); self:HighlightText(); end);
+  urlText:SetScript("OnChar", function(self)
+    self:SetText(group.url)
+    self:HighlightText()
+  end)
   urlText:SetScript("OnEscapePressed", function()
     urlText:ClearFocus()
     urlText:Hide()
@@ -260,193 +277,227 @@ local function ConstructTextEditor(frame)
     editorError:Hide()
   end)
 
-  local oldOnCursorChanged = editor.editBox:GetScript("OnCursorChanged");
+  local oldOnCursorChanged = editor.editBox:GetScript("OnCursorChanged")
   editor.editBox:SetScript("OnCursorChanged", function(...)
-    oldOnCursorChanged(...);
-    local cursorPosition = editor.editBox:GetCursorPosition();
-    local next = -1;
-    local line = 0;
+    oldOnCursorChanged(...)
+    local cursorPosition = editor.editBox:GetCursorPosition()
+    local next = -1
+    local line = 0
     while (next and cursorPosition >= next) do
-      next = originalGetText(editor.editBox):find("[\n]", next + 1);
-      line = line + 1;
+      next = originalGetText(editor.editBox):find("[\n]", next + 1)
+      line = line + 1
     end
-    editorLine:SetNumber(line);
-  end);
+    editorLine:SetNumber(line)
+  end)
 
   editorLine:SetScript("OnEnterPressed", function()
-    local newLine = editorLine:GetNumber();
-    local newPosition = 0;
+    local newLine = editorLine:GetNumber()
+    local newPosition = 0
     while (newLine > 1 and newPosition) do
-      newPosition = originalGetText(editor.editBox):find("[\n]", newPosition + 1);
-      newLine = newLine - 1;
+      newPosition =
+        originalGetText(editor.editBox):find("[\n]", newPosition + 1)
+      newLine = newLine - 1
     end
 
-    if (newPosition) then
-      editor.editBox:SetCursorPosition(newPosition);
-      editor.editBox:SetFocus();
+    if newPosition then
+      editor.editBox:SetCursorPosition(newPosition)
+      editor.editBox:SetFocus()
     end
-  end);
+  end)
 
-  function group.Open(self, data, path, enclose, multipath, reloadOptions, setOnParent, url)
-    self.data = data;
-    self.path = path;
-    self.multipath = multipath;
-    self.reloadOptions = reloadOptions;
-    self.setOnParent = setOnParent;
+  function group.Open(
+  self,
+    data,
+    path,
+    enclose,
+    multipath,
+    reloadOptions,
+    setOnParent,
+    url
+  )
+    self.data = data
+    self.path = path
+    self.multipath = multipath
+    self.reloadOptions = reloadOptions
+    self.setOnParent = setOnParent
     self.url = url
     urlText:SetText(url)
     urlText:Hide()
     urlCopyLabel:Hide()
     helpButton:Show()
-    if(frame.window == "texture") then
-      frame.texturePicker:CancelClose();
-    elseif(frame.window == "icon") then
-      frame.iconPicker:CancelClose();
+    if (frame.window == "texture") then
+      frame.texturePicker:CancelClose()
+    elseif (frame.window == "icon") then
+      frame.iconPicker:CancelClose()
     end
-    frame.window = "texteditor";
+    frame.window = "texteditor"
     frame:UpdateFrameVisible()
-    local title = (type(data.id) == "string" and data.id or L["Temporary Group"]).." -";
-    if (not multipath) then
+    local title =
+      (type(data.id) == "string" and data.id or L["Temporary Group"]) .. " -"
+    if not multipath then
       for index, field in pairs(path) do
-        if(type(field) == "number") then
-          field = "Trigger "..field+1
+        if (type(field) == "number") then
+          field = "Trigger " .. field + 1
         end
-        title = title.." "..field:sub(1, 1):upper()..field:sub(2);
+        title = title .. " " .. field:sub(1, 1):upper() .. field:sub(2)
       end
     end
-    editor:SetLabel(title);
-    editor.editBox:SetScript("OnEscapePressed", function() group:CancelClose(); end);
-    self.oldOnTextChanged = editor.editBox:GetScript("OnTextChanged");
+    editor:SetLabel(title)
+    editor.editBox:SetScript("OnEscapePressed", function()
+      group:CancelClose()
+    end)
+    self.oldOnTextChanged = editor.editBox:GetScript("OnTextChanged")
     editor.editBox:SetScript("OnTextChanged", function(...)
-      local str = editor.editBox:GetText();
-      if not(str) or editor.combinedText == true then
-        editorError:SetText("");
+      local str = editor.editBox:GetText()
+      if not str or editor.combinedText == true then
+        editorError:SetText("")
       else
         local _, errorString
-        if(enclose) then
-          _, errorString = loadstring("return function() "..str.."\n end");
+        if enclose then
+          _, errorString = loadstring("return function() " .. str .. "\n end")
         else
-          _, errorString = loadstring("return "..str);
+          _, errorString = loadstring("return " .. str)
         end
         if errorString then
           urlText:Hide()
           urlCopyLabel:Hide()
           helpButton:Show()
           editorError:Show()
-          editorError:SetText(errorString);
+          editorError:SetText(errorString)
         else
-          editorError:SetText("");
+          editorError:SetText("")
         end
       end
-      self.oldOnTextChanged(...);
-    end);
-    if(data.controlledChildren and not setOnParent) then
-      local singleText;
-      local sameTexts = true;
-      local combinedText = "";
+      self.oldOnTextChanged(...)
+    end)
+    if (data.controlledChildren and not setOnParent) then
+      local singleText
+      local sameTexts = true
+      local combinedText = ""
       for index, childId in pairs(data.controlledChildren) do
-        local childData = WeakAuras.GetData(childId);
-        local text = valueFromPath(childData, multipath and path[childId] or path);
+        local childData = WeakAuras.GetData(childId)
+        local text =
+          valueFromPath(childData, multipath and path[childId] or path)
         if text then
-          if not(singleText) then
-            singleText = text;
+          if not singleText then
+            singleText = text
           else
-            if not(singleText == text) then
-              sameTexts = false;
+            if not (singleText == text) then
+              sameTexts = false
             end
           end
-          if not(combinedText == "") then
-            combinedText = combinedText.."\n\n";
+          if not (combinedText == "") then
+            combinedText = combinedText .. "\n\n"
           end
 
-          combinedText = combinedText.. L["-- Do not remove this comment, it is part of this trigger: "] .. childId .. "\n";
-          combinedText = combinedText..(text or "");
+          combinedText =
+            combinedText .. L["-- Do not remove this comment, it is part of this trigger: "] .. childId .. "\n"
+          combinedText = combinedText .. (text or "")
         end
       end
-      if(sameTexts) then
-        editor:SetText(singleText or "");
-        editor.combinedText = false;
+      if sameTexts then
+        editor:SetText(singleText or "")
+        editor.combinedText = false
       else
-        editor:SetText(combinedText);
-        editor.combinedText = true;
+        editor:SetText(combinedText)
+        editor.combinedText = true
       end
     else
-      editor:SetText(valueFromPath(data, path) or "");
+      editor:SetText(valueFromPath(data, path) or "")
     end
-    editor:SetFocus();
+    editor:SetFocus()
   end
 
   function group.CancelClose(self)
-    editor.editBox:SetScript("OnTextChanged", self.oldOnTextChanged);
-    editor:ClearFocus();
-    frame.window = "default";
+    editor.editBox:SetScript("OnTextChanged", self.oldOnTextChanged)
+    editor:ClearFocus()
+    frame.window = "default"
     frame:UpdateFrameVisible()
   end
 
   local function extractTexts(input, ids)
-    local texts = {};
+    local texts = {}
 
-    local currentPos, id, startIdLine, startId, endId, endIdLine;
-    while (true) do
-      startIdLine, startId = string.find(input, L["-- Do not remove this comment, it is part of this trigger: "], currentPos, true);
-      if (not startId) then break end
-
-      endId, endIdLine = string.find(input, "\n", startId, true);
-      if (not endId) then break end;
-
-      if (currentPos) then
-        local trimmedPosition = startIdLine - 1;
-        while (string.sub(input, trimmedPosition, trimmedPosition) == "\n") do
-          trimmedPosition = trimmedPosition - 1;
-        end
-
-        texts[id] = string.sub(input, currentPos, trimmedPosition);
+    local currentPos, id, startIdLine, startId, endId, endIdLine
+    while true do
+      startIdLine, startId =
+        string.find(
+          input,
+          L["-- Do not remove this comment, it is part of this trigger: "],
+          currentPos,
+          true
+        )
+      if not startId then
+        break
       end
 
-      id = string.sub(input, startId + 1, endId - 1);
+      endId, endIdLine = string.find(input, "\n", startId, true)
+      if not endId then
+        break
+      end
 
-      currentPos = endIdLine + 1;
+      if currentPos then
+        local trimmedPosition = startIdLine - 1
+        while (string.sub(input, trimmedPosition, trimmedPosition) == "\n") do
+          trimmedPosition = trimmedPosition - 1
+        end
+
+        texts[id] = string.sub(input, currentPos, trimmedPosition)
+      end
+
+      id = string.sub(input, startId + 1, endId - 1)
+
+      currentPos = endIdLine + 1
     end
 
-    if (id) then
-      texts[id] = string.sub(input, currentPos, string.len(input));
+    if id then
+      texts[id] = string.sub(input, currentPos, string.len(input))
     end
 
-    return texts;
+    return texts
   end
 
   function group.Close(self)
-    if(self.data.controlledChildren and not self.setOnParent) then
-      local textById = editor.combinedText and extractTexts(editor:GetText(), self.data.controlledChildren);
+    if (self.data.controlledChildren and not self.setOnParent) then
+      local textById =
+        editor.combinedText and extractTexts(
+          editor:GetText(),
+          self.data.controlledChildren
+        )
       for index, childId in pairs(self.data.controlledChildren) do
-        local text = editor.combinedText and (textById[childId] or "") or editor:GetText();
-        local childData = WeakAuras.GetData(childId);
-        valueToPath(childData, self.multipath and self.path[childId] or self.path, text);
-        WeakAuras.Add(childData);
+        local text =
+          editor.combinedText and (textById[childId] or "") or editor:GetText()
+        local childData = WeakAuras.GetData(childId)
+        valueToPath(
+          childData,
+          self.multipath and self.path[childId] or self.path,
+          text
+        )
+        WeakAuras.Add(childData)
       end
     else
-      valueToPath(self.data, self.path, editor:GetText());
-      WeakAuras.Add(self.data);
+      valueToPath(self.data, self.path, editor:GetText())
+      WeakAuras.Add(self.data)
     end
-    if (self.reloadOptions) then
-      if(self.data.controlledChildren) then
+    if self.reloadOptions then
+      if self.data.controlledChildren then
         for index, childId in pairs(self.data.controlledChildren) do
-          WeakAuras.ScheduleReloadOptions(WeakAuras.GetData(childId));
+          WeakAuras.ScheduleReloadOptions(WeakAuras.GetData(childId))
         end
-        WeakAuras.ScheduleReloadOptions(self.data);
+        WeakAuras.ScheduleReloadOptions(self.data)
       else
-        WeakAuras.ScheduleReloadOptions(self.data);
+        WeakAuras.ScheduleReloadOptions(self.data)
       end
     else
-      WeakAuras.ScheduleReloadOptions(self.data);
+      WeakAuras.ScheduleReloadOptions(self.data)
     end
 
-    editor.editBox:SetScript("OnTextChanged", self.oldOnTextChanged);
-    editor:ClearFocus();
-    frame.window = "default";
+    editor.editBox:SetScript("OnTextChanged", self.oldOnTextChanged)
+    editor:ClearFocus()
+    frame.window = "default"
     frame:UpdateFrameVisible()
 
-    frame:RefreshPick();
+    frame:RefreshPick()
   end
   WeakAuras.editor = editor
 

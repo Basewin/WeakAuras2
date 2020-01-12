@@ -18,8 +18,7 @@ History:
 if not WeakAuras.IsCorrectVersion() then return end
 
 local WeakAuras = WeakAuras
-local history -- history db upvalue
-
+local history  -- history db upvalue
 function WeakAuras.LoadHistory(historydb, ageCutoff, migrationExpiry)
   history = historydb
   if ageCutoff ~= false then
@@ -90,15 +89,17 @@ end
 function WeakAuras.ClearOldHistory(daysBack, includeNonDeleted)
   local cutoffTime = time() - ((daysBack or 30) * 86400) -- eighty six, four hundred seconds in a day...
   for uid, hist in pairs(history) do
-    if (includeNonDeleted or not WeakAuras.GetDataByUID(uid))
-    and (hist.lastUpdate < cutoffTime) then
+    if (includeNonDeleted or not WeakAuras.GetDataByUID(
+      uid
+    )) and (hist.lastUpdate < cutoffTime) then
       history[uid] = nil
     end
   end
 end
 
 function WeakAuras.SetMigrationSnapshot(uid, oldData)
-  local hist = WeakAuras.GetHistory(uid) or WeakAuras.SetHistory(uid, oldData, "auto")
+  local hist =
+    WeakAuras.GetHistory(uid) or WeakAuras.SetHistory(uid, oldData, "auto")
   if hist and oldData then
     hist.migration = oldData
     hist.lastMigrated = time()

@@ -3,7 +3,9 @@ if not WeakAuras.IsCorrectVersion() then return end
 local SharedMedia = LibStub("LibSharedMedia-3.0")
 local L = WeakAuras.L
 
-local screenWidth, screenHeight = math.ceil(GetScreenWidth() / 20) * 20, math.ceil(GetScreenHeight() / 20) * 20
+local screenWidth, screenHeight =
+  math.ceil(GetScreenWidth() / 20) * 20,
+  math.ceil(GetScreenHeight() / 20) * 20
 
 local self_point_types = {
   BOTTOMLEFT = L["Bottom Left"],
@@ -22,7 +24,12 @@ local function createOptions(parentData, data, index, subIndex)
   -- The toggles for font flags is intentionally not keyed on the id
   -- So that all auras share the state of that toggle
   local hiddenFontExtra = function()
-    return WeakAuras.IsCollapsed("subtext", "subtext", "fontflags" .. index, true)
+    return WeakAuras.IsCollapsed(
+      "subtext",
+      "subtext",
+      "fontflags" .. index,
+      true
+    )
   end
 
   local indentWidth = 0.15
@@ -31,22 +38,42 @@ local function createOptions(parentData, data, index, subIndex)
     __title = L["Text %s"]:format(subIndex),
     __order = 1,
     __up = function()
-      if (WeakAuras.ApplyToDataOrChildData(parentData, WeakAuras.MoveSubRegionUp, index, "subtext")) then
+      if WeakAuras.ApplyToDataOrChildData(
+        parentData,
+        WeakAuras.MoveSubRegionUp,
+        index,
+        "subtext"
+      ) then
         WeakAuras.ReloadOptions2(parentData.id, parentData)
       end
     end,
     __down = function()
-      if (WeakAuras.ApplyToDataOrChildData(parentData, WeakAuras.MoveSubRegionDown, index, "subtext")) then
+      if WeakAuras.ApplyToDataOrChildData(
+        parentData,
+        WeakAuras.MoveSubRegionDown,
+        index,
+        "subtext"
+      ) then
         WeakAuras.ReloadOptions2(parentData.id, parentData)
       end
     end,
     __duplicate = function()
-      if (WeakAuras.ApplyToDataOrChildData(parentData, WeakAuras.DuplicateSubRegion, index, "subtext")) then
+      if WeakAuras.ApplyToDataOrChildData(
+        parentData,
+        WeakAuras.DuplicateSubRegion,
+        index,
+        "subtext"
+      ) then
         WeakAuras.ReloadOptions2(parentData.id, parentData)
       end
     end,
     __delete = function()
-      if (WeakAuras.ApplyToDataOrChildData(parentData, WeakAuras.DeleteSubRegion, index, "subtext")) then
+      if WeakAuras.ApplyToDataOrChildData(
+        parentData,
+        WeakAuras.DeleteSubRegion,
+        index,
+        "subtext"
+      ) then
         WeakAuras.ReloadOptions2(parentData.id, parentData)
       end
     end,
@@ -54,20 +81,22 @@ local function createOptions(parentData, data, index, subIndex)
       type = "toggle",
       width = WeakAuras.halfWidth,
       order = 9,
-      name = L["Show Text"],
+      name = L["Show Text"]
     },
     text_color = {
       type = "color",
       width = WeakAuras.halfWidth,
       name = L["Color"],
       hasAlpha = true,
-      order = 10,
+      order = 10
     },
     text_text = {
       type = "input",
       width = WeakAuras.normalWidth,
       desc = function()
-        return L["Dynamic text tooltip"] .. WeakAuras.GetAdditionalProperties(parentData)
+        return L["Dynamic text tooltip"] .. WeakAuras.GetAdditionalProperties(
+          parentData
+        )
       end,
       name = L["Display Text"],
       order = 11,
@@ -83,7 +112,7 @@ local function createOptions(parentData, data, index, subIndex)
       dialogControl = "LSM30_Font",
       name = L["Font"],
       order = 12,
-      values = AceGUIWidgetLSMlists.font,
+      values = AceGUIWidgetLSMlists.font
     },
     text_fontSize = {
       type = "range",
@@ -92,23 +121,27 @@ local function createOptions(parentData, data, index, subIndex)
       order = 13,
       min = 6,
       softMax = 72,
-      step = 1,
+      step = 1
     },
     text_fontFlagsDescription = {
       type = "description",
       name = function()
         local textFlags = WeakAuras.font_flags[data.text_fontType]
-        local color = format("%02x%02x%02x%02x",
-                             data.text_shadowColor[4] * 255, data.text_shadowColor[1] * 255,
-                             data.text_shadowColor[2] * 255, data.text_shadowColor[3]*255)
+        local color =
+          format(
+            "%02x%02x%02x%02x",
+            data.text_shadowColor[4] * 255,
+            data.text_shadowColor[1] * 255,
+            data.text_shadowColor[2] * 255,
+            data.text_shadowColor[3] * 255
+          )
 
         local textJustify = ""
         if data.text_justify == "CENTER" then
-
         elseif data.text_justify == "LEFT" then
           textJustify = " " .. L["and aligned left"]
         elseif data.text_justify == "RIGHT" then
-          textJustify = " " ..  L["and aligned right"]
+          textJustify = " " .. L["and aligned right"]
         end
 
         local textRotate = ""
@@ -118,7 +151,15 @@ local function createOptions(parentData, data, index, subIndex)
           textRotate = " " .. L["and rotated right"]
         end
 
-        local secondline = L["|cFFffcc00Font Flags:|r |cFFFF0000%s|r and shadow |c%sColor|r with offset |cFFFF0000%s/%s|r%s%s"]:format(textFlags, color, data.text_shadowXOffset, data.text_shadowYOffset, textRotate, textJustify)
+        local secondline =
+          L["|cFFffcc00Font Flags:|r |cFFFF0000%s|r and shadow |c%sColor|r with offset |cFFFF0000%s/%s|r%s%s"]:format(
+            textFlags,
+            color,
+            data.text_shadowXOffset,
+            data.text_shadowYOffset,
+            textRotate,
+            textJustify
+          )
 
         return secondline
       end,
@@ -132,17 +173,33 @@ local function createOptions(parentData, data, index, subIndex)
       order = 44.1,
       width = 0.15,
       image = function()
-        local collapsed = WeakAuras.IsCollapsed("subtext", "subtext", "fontflags" .. index, true)
+        local collapsed =
+          WeakAuras.IsCollapsed(
+            "subtext",
+            "subtext",
+            "fontflags" .. index,
+            true
+          )
         return collapsed and "Interface\\AddOns\\WeakAuras\\Media\\Textures\\edit" or "Interface\\AddOns\\WeakAuras\\Media\\Textures\\editdown"
       end,
       imageWidth = 24,
       imageHeight = 24,
       func = function()
-        local collapsed = WeakAuras.IsCollapsed("subtext", "subtext", "fontflags" .. index, true)
-        WeakAuras.SetCollapsed("subtext", "subtext", "fontflags" .. index, not collapsed)
+        local collapsed =
+          WeakAuras.IsCollapsed(
+            "subtext",
+            "subtext",
+            "fontflags" .. index,
+            true
+          )
+        WeakAuras.SetCollapsed(
+          "subtext",
+          "subtext",
+          "fontflags" .. index,
+          not collapsed
+        )
       end
     },
-
     text_font_space = {
       type = "description",
       name = "",
@@ -150,7 +207,6 @@ local function createOptions(parentData, data, index, subIndex)
       hidden = hiddenFontExtra,
       width = indentWidth
     },
-
     text_fontType = {
       type = "select",
       width = WeakAuras.normalWidth - indentWidth,
@@ -167,7 +223,6 @@ local function createOptions(parentData, data, index, subIndex)
       order = 47,
       hidden = hiddenFontExtra
     },
-
     text_font_space3 = {
       type = "description",
       name = "",
@@ -195,7 +250,6 @@ local function createOptions(parentData, data, index, subIndex)
       order = 49,
       hidden = hiddenFontExtra
     },
-
     text_font_space4 = {
       type = "description",
       name = "",
@@ -234,14 +288,16 @@ local function createOptions(parentData, data, index, subIndex)
       Mixin(anchors, WeakAuras.GetAnchorsForData(childData, "point"))
     end
   else
-     anchors = WeakAuras.GetAnchorsForData(parentData, "point")
+    anchors = WeakAuras.GetAnchorsForData(parentData, "point")
   end
   -- Anchor Options
   options.text_anchorsDescription = {
     type = "description",
     name = function()
-      local selfPoint = data.text_selfPoint ~= "AUTO" and self_point_types[data.text_selfPoint]
-      local anchorPoint = anchors[data.text_anchorPoint or "CENTER"] or anchors["CENTER"]
+      local selfPoint =
+        data.text_selfPoint ~= "AUTO" and self_point_types[data.text_selfPoint]
+      local anchorPoint =
+        anchors[data.text_anchorPoint or "CENTER"] or anchors["CENTER"]
 
       local xOffset = data.anchorXOffset or 0
       local yOffset = data.anchorYOffset or 0
@@ -252,15 +308,29 @@ local function createOptions(parentData, data, index, subIndex)
 
       if selfPoint then
         if xOffset == 0 and yOffset == 0 then
-          return L["|cFFffcc00Anchors:|r Anchored |cFFFF0000%s|r to frame's |cFFFF0000%s|r"]:format(selfPoint, anchorPoint)
+          return L["|cFFffcc00Anchors:|r Anchored |cFFFF0000%s|r to frame's |cFFFF0000%s|r"]:format(
+            selfPoint,
+            anchorPoint
+          )
         else
-          return L["|cFFffcc00Anchors:|r Anchored |cFFFF0000%s|r to frame's |cFFFF0000%s|r with offset |cFFFF0000%s/%s|r"]:format(selfPoint, anchorPoint, xOffset, yOffset)
+          return L["|cFFffcc00Anchors:|r Anchored |cFFFF0000%s|r to frame's |cFFFF0000%s|r with offset |cFFFF0000%s/%s|r"]:format(
+            selfPoint,
+            anchorPoint,
+            xOffset,
+            yOffset
+          )
         end
       else
         if xOffset == 0 and yOffset == 0 then
-          return L["|cFFffcc00Anchors:|r Anchored to frame's |cFFFF0000%s|r"]:format(anchorPoint)
+          return L["|cFFffcc00Anchors:|r Anchored to frame's |cFFFF0000%s|r"]:format(
+            anchorPoint
+          )
         else
-          return L["|cFFffcc00Anchors:|r Anchored to frame's |cFFFF0000%s|r with offset |cFFFF0000%s/%s|r"]:format(anchorPoint, xOffset, yOffset)
+          return L["|cFFffcc00Anchors:|r Anchored to frame's |cFFFF0000%s|r with offset |cFFFF0000%s/%s|r"]:format(
+            anchorPoint,
+            xOffset,
+            yOffset
+          )
         end
       end
     end,
@@ -275,19 +345,41 @@ local function createOptions(parentData, data, index, subIndex)
     order = 60.1,
     width = 0.15,
     image = function()
-      local collapsed = WeakAuras.IsCollapsed("subregion", "text_anchors", tostring(index), true)
+      local collapsed =
+        WeakAuras.IsCollapsed(
+          "subregion",
+          "text_anchors",
+          tostring(index),
+          true
+        )
       return collapsed and "Interface\\AddOns\\WeakAuras\\Media\\Textures\\edit" or "Interface\\AddOns\\WeakAuras\\Media\\Textures\\editdown"
     end,
     imageWidth = 24,
     imageHeight = 24,
     func = function()
-      local collapsed = WeakAuras.IsCollapsed("subregion", "text_anchors", tostring(index), true)
-      WeakAuras.SetCollapsed("subregion", "text_anchors", tostring(index), not collapsed)
+      local collapsed =
+        WeakAuras.IsCollapsed(
+          "subregion",
+          "text_anchors",
+          tostring(index),
+          true
+        )
+      WeakAuras.SetCollapsed(
+        "subregion",
+        "text_anchors",
+        tostring(index),
+        not collapsed
+      )
     end
   }
 
   local hiddenFunction = function()
-    return WeakAuras.IsCollapsed("subregion", "text_anchors", tostring(index), true)
+    return WeakAuras.IsCollapsed(
+      "subregion",
+      "text_anchors",
+      tostring(index),
+      true
+    )
   end
 
   options.text_anchor_space = {
@@ -355,7 +447,9 @@ local function createOptions(parentData, data, index, subIndex)
     end
 
     for index, subRegion in ipairs(parentData.subRegions) do
-      if subRegion.type == "subtext" and WeakAuras.ContainsCustomPlaceHolder(subRegion.text_text) then
+      if subRegion.type == "subtext" and WeakAuras.ContainsCustomPlaceHolder(
+        subRegion.text_text
+      ) then
         return false
       end
     end
@@ -369,7 +463,10 @@ local function createOptions(parentData, data, index, subIndex)
       end
 
       for index, subRegion in ipairs(parentData.subRegions) do
-        if subRegion.type == "subtext" and WeakAuras.ContainsPlaceHolders(subRegion.text_text, placeholders) then
+        if subRegion.type == "subtext" and WeakAuras.ContainsPlaceHolders(
+          subRegion.text_text,
+          placeholders
+        ) then
           return false
         end
       end
@@ -381,7 +478,9 @@ local function createOptions(parentData, data, index, subIndex)
 
   local commonTextOptions = {
     __title = L["Common Text"],
-    __hidden = function() return hideCustomTextOption() and CheckForTimePlaceHolders() end,
+    __hidden = function()
+      return hideCustomTextOption() and CheckForTimePlaceHolders()
+    end,
     text_customTextUpdate = {
       type = "select",
       width = WeakAuras.doubleWidth,
@@ -389,7 +488,9 @@ local function createOptions(parentData, data, index, subIndex)
       name = L["Update Custom Text On..."],
       values = WeakAuras.text_check_types,
       order = 3,
-      get = function() return parentData.customTextUpdate or "event" end,
+      get = function()
+        return parentData.customTextUpdate or "event"
+      end,
       set = function(info, v)
         parentData.customTextUpdate = v
         WeakAuras.Add(parentData)
@@ -405,12 +506,14 @@ local function createOptions(parentData, data, index, subIndex)
       order = 5,
       name = L["Remaining Time Precision"],
       values = WeakAuras.precision_types,
-      get = function() return parentData.progressPrecision or 1 end,
+      get = function()
+        return parentData.progressPrecision or 1
+      end,
       set = function(info, v)
         parentData.progressPrecision = v
         WeakAuras.Add(parentData)
         WeakAuras.ReloadOptions2(parentData.id, parentData)
-      end,
+      end
     },
     text_totalPrecision = {
       type = "select",
@@ -420,19 +523,34 @@ local function createOptions(parentData, data, index, subIndex)
       order = 6,
       name = L["Total Time Precision"],
       values = WeakAuras.precision_types,
-      get = function() return parentData.totalPrecision or 1 end,
+      get = function()
+        return parentData.totalPrecision or 1
+      end,
       set = function(info, v)
         parentData.totalPrecision = v
         WeakAuras.Add(parentData)
         WeakAuras.ReloadOptions2(parentData.id, parentData)
-      end,
-    },
+      end
+    }
   }
 
-  WeakAuras.AddCodeOption(commonTextOptions, parentData, L["Custom Function"], "customText", "https://github.com/WeakAuras/WeakAuras2/wiki/Text-Replacements",
-                          4,  hideCustomTextOption, {"customText"}, false)
+  WeakAuras.AddCodeOption(
+    commonTextOptions,
+    parentData,
+    L["Custom Function"],
+    "customText",
+    "https://github.com/WeakAuras/WeakAuras2/wiki/Text-Replacements",
+    4,
+    hideCustomTextOption,
+    { "customText" },
+    false
+  )
 
   return options, commonTextOptions
 end
 
-WeakAuras.RegisterSubRegionOptions("subtext", createOptions, L["Shows one or more lines of text, which can include dynamic information such as progress or stacks"])
+WeakAuras.RegisterSubRegionOptions(
+  "subtext",
+  createOptions,
+  L["Shows one or more lines of text, which can include dynamic information such as progress or stacks"]
+)

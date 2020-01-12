@@ -49,7 +49,7 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
     local workingTable = {}
     local workingTable2 = {}
     local function tableclear(t)
-        for k in next,t do
+        for k in next, t do
             t[k] = nil
         end
     end
@@ -110,7 +110,6 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
     tokens.TOKEN_HASH = 39
     tokens.TOKEN_PERCENT = 40
 
-
     -- ascii codes
     local bytes = {}
     lib.bytes = bytes
@@ -151,7 +150,6 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
     -- new as of lua 5.1
     bytes.BYTE_HASH = stringbyte("#")
     bytes.BYTE_PERCENT = stringbyte("%")
-
 
     local linebreakCharacters = {}
     lib.linebreakCharacters = linebreakCharacters
@@ -266,10 +264,7 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
         while true do
             local byte = stringbyte(text, pos)
 
-            if not byte or
-            linebreakCharacters[byte] or
-            whitespaceCharacters[byte] or
-            specialCharacters[byte] then
+            if not byte or linebreakCharacters[byte] or whitespaceCharacters[byte] or specialCharacters[byte] then
                 return tokens.TOKEN_IDENTIFIER, pos
             end
             pos = pos + 1
@@ -327,9 +322,11 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
     local function nextComment(text, pos)
         -- When we get here we have already parsed the "--"
         -- Check for long comment
-        local isBracketString, nextPos, equalsCount = isBracketStringNext(text, pos)
+        local isBracketString, nextPos, equalsCount =
+            isBracketStringNext(text, pos)
         if isBracketString then
-            local tokenType, nextPos2 = nextBracketString(text, nextPos, equalsCount)
+            local tokenType, nextPos2 =
+                nextBracketString(text, nextPos, equalsCount)
             return tokens.TOKEN_COMMENT_LONG, nextPos2
         end
 
@@ -403,7 +400,6 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
                 return token, pos + 1
             end
 
-            -- WoW specific (for color codes)
             if byte == bytes.BYTE_VERTICAL then
                 byte = stringbyte(text, pos + 1)
                 if byte == bytes.BYTE_VERTICAL then
@@ -435,7 +431,8 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
             end
 
             if byte == bytes.BYTE_LEFTBRACKET then
-                local isBracketString, nextPos, equalsCount = isBracketStringNext(text, pos)
+                local isBracketString, nextPos, equalsCount =
+                    isBracketStringNext(text, pos)
                 if isBracketString then
                     return nextBracketString(text, nextPos, equalsCount)
                 else
@@ -496,6 +493,7 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
             end
 
             return tokens.TOKEN_UNKNOWN, pos + 1
+        -- WoW specific (for color codes)
         elseif byte >= bytes.BYTE_0 and byte <= bytes.BYTE_9 then
             return nextNumberIntPart(text, pos + 1)
         else
@@ -505,10 +503,10 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
 
     -- Cool stuff begins here! (indentation and highlighting)
 
-    local noIndentEffect = {0, 0}
-    local indentLeft = {-1, 0}
-    local indentRight = {0, 1}
-    local indentBoth = {-1, 1}
+    local noIndentEffect = { 0, 0 }
+    local indentLeft = { -1, 0 }
+    local indentRight = { 0, 1 }
+    local indentBoth = { -1, 1 }
 
     local keywords = {}
     lib.keywords = keywords
@@ -552,7 +550,7 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
     end
 
     local function fillWithSpaces(a, b)
-        return stringrep(" ", a*b)
+        return stringrep(" ", a * b)
     end
 
     function lib.colorCodeCode(code, colorTable, caretPosition)
@@ -602,7 +600,7 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
             end
 
             if tokenType == tokens.TOKEN_COLORCODE_START or tokenType == tokens.TOKEN_COLORCODE_STOP or tokenType == tokens.TOKEN_UNKNOWN then
-                -- ignore color codes
+            -- ignore color codes
             elseif tokenType == tokens.TOKEN_LINEBREAK or tokenType == tokens.TOKEN_WHITESPACE then
                 if tokenType == tokens.TOKEN_LINEBREAK then
                     numLines = numLines + 1
@@ -646,7 +644,10 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
                     tsize = tsize + 1
                     workingTable[tsize] = stopColor
 
-                    totalLen = totalLen + stringlen(color) + (nextPos - pos) + stopColorLen
+                    totalLen =
+                        totalLen + stringlen(
+                            color
+                        ) + (nextPos - pos) + stopColorLen
                     prevTokenWasColored = true
                 else
                     tsize = tsize + 1
@@ -719,7 +720,9 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
 
             if not tokenType or tokenType == tokens.TOKEN_LINEBREAK then
                 level = level + preIndent
-                if level < 0 then level = 0 end
+                if level < 0 then
+                    level = 0
+                end
 
                 local s = fillFunction(level, tabWidth)
 
@@ -732,7 +735,7 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
                     newCaretPositionFinalized = true
                 end
 
-                for k, v in next,workingTable2 do
+                for k, v in next, workingTable2 do
                     tsize = tsize + 1
                     workingTable[tsize] = v
                     totalLen = totalLen + stringlen(v)
@@ -747,7 +750,9 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
                 totalLen = totalLen + nextPos - pos
 
                 level = level + postIndent
-                if level < 0 then level = 0 end
+                if level < 0 then
+                    level = 0
+                end
 
                 tableclear(workingTable2)
                 tsize2 = 0
@@ -766,7 +771,7 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
                     totalLen2 = totalLen2 + stringlen(s)
                 end
             elseif tokenType == tokens.TOKEN_COLORCODE_START or tokenType == tokens.TOKEN_COLORCODE_STOP or tokenType == tokens.TOKEN_UNKNOWN then
-                -- skip these, though they shouldn't be encountered here anyway
+            -- skip these, though they shouldn't be encountered here anyway
             else
                 hitNonWhitespace = true
                 local str = stringsub(code, pos, nextPos - 1)
@@ -782,7 +787,8 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
 
                 if indentTable then
                     if hitIndentRight then
-                        postIndent = postIndent + indentTable[1] + indentTable[2]
+                        postIndent =
+                            postIndent + indentTable[1] + indentTable[2]
                     else
                         local pre = indentTable[1]
                         local post = indentTable[2]
@@ -832,7 +838,6 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
                     tsize2 = tsize2 + 1
                     workingTable2[tsize2] = str
                     totalLen2 = totalLen2 + nextPos - pos
-
                 end
             end
             pos = nextPos
@@ -895,7 +900,6 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
     -- end of caret code
 
     function lib.stripWowColors(code)
-
         -- HACK!
         -- This is a fix for a bug, where an unfinished string causes a lot of newlines to be created.
         -- The reason for the bug, is that a |r\n\n gets converted to \n\n|r after the next indent-run
@@ -922,19 +926,19 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
             else
                 if prevVertical and not even then
                     if byte == bytes.BYTE_c then
-
                         if pos - 2 >= selectionStart then
                             tsize = tsize + 1
-                            workingTable[tsize] = stringsub(code, selectionStart, pos - 2)
+                            workingTable[tsize] =
+                                stringsub(code, selectionStart, pos - 2)
                         end
 
                         pos = pos + 8
                         selectionStart = pos + 1
                     elseif byte == bytes.BYTE_r then
-
                         if pos - 2 >= selectionStart then
                             tsize = tsize + 1
-                            workingTable[tsize] = stringsub(code, selectionStart, pos - 2)
+                            workingTable[tsize] =
+                                stringsub(code, selectionStart, pos - 2)
                         end
                         selectionStart = pos + 1
                     end
@@ -984,7 +988,7 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
             if b == linebreak then
                 linebreakcount = linebreakcount + 1
             elseif whitespaceCharacters[b] then
-                -- Ignore whitespace characters
+            -- Ignore whitespace characters
             else
                 break
             end
@@ -1018,9 +1022,7 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
 
         local orgCode = editboxGetText(editbox)
         local prevCode = editboxStringCache[editbox]
-        if prevCode == orgCode then
-            return
-        end
+        if prevCode == orgCode then return end
 
         local pos = getCaretPos(editbox)
 
@@ -1029,7 +1031,8 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
 
         colorTable[0] = "|r"
 
-        local newCode, newPos, numLines = lib.colorCodeCode(code, colorTable, pos)
+        local newCode, newPos, numLines =
+            lib.colorCodeCode(code, colorTable, pos)
         newCode = lib.padWithLinebreaks(newCode)
 
         editboxStringCache[editbox] = newCode
@@ -1040,8 +1043,12 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
 
             editboxSetText(editbox, newCode)
             if newPos then
-                if newPos < 0 then newPos = 0 end
-                if newPos > stringlenNewCode then newPos = stringlenNewCode end
+                if newPos < 0 then
+                    newPos = 0
+                end
+                if newPos > stringlenNewCode then
+                    newPos = stringlenNewCode
+                end
 
                 setCaretPos(editbox, newPos)
             end
@@ -1062,9 +1069,7 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
 
         local orgCode = editboxGetText(editbox)
         local prevCode = editboxIndentCache[editbox]
-        if prevCode == orgCode then
-            return
-        end
+        if prevCode == orgCode then return end
 
         local pos = getCaretPos(editbox)
 
@@ -1084,8 +1089,12 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
             editboxSetText(editbox, newCode)
 
             if newPos then
-                if newPos < 0 then newPos = 0 end
-                if newPos > stringlenNewCode then newPos = stringlenNewCode end
+                if newPos < 0 then
+                    newPos = 0
+                end
+                if newPos > stringlenNewCode then
+                    newPos = stringlenNewCode
+                end
 
                 setCaretPos(editbox, newPos)
             end
@@ -1201,9 +1210,7 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
     lib.addSmartCode = lib.enable
 
     function lib.disable(editbox)
-        if not enabled[editbox] then
-            return
-        end
+        if not enabled[editbox] then return end
         enabled[editbox] = nil
 
         -- revert settings for max bytes / letters
@@ -1278,52 +1285,4 @@ if not IndentationLib.revision or revision > IndentationLib.revision then
     defaultColorTable["not"] = logicColor2
 
     defaultColorTable[0] = "|r"
-
 end
-
--- just for testing
---[[
-function testTokenizer()
-  local str = ""
-  for line in io.lines("indent.lua") do
-   str = str .. line .. "\n"
-  end
-
-  local pos = 1
-
-  while true do
-   local tokenType, nextPos = nextToken(str, pos)
-
-   if not tokenType then
-  break
-   end
-
-   if true or tokenType ~= tokens.TOKEN_WHITESPACE and tokenType ~= tokens.TOKEN_LINEBREAK then
-  print(stringformat("Found token %d (%d-%d): (%s)", tokenType, pos, nextPos - 1, stringsub(str, pos, nextPos - 1)))
-   end
-
-   if tokenType == tokens.TOKEN_UNKNOWN then
-  print("unknown token!")
-  break
-   end
-
-   pos = nextPos
-  end
-end
-
-
-function testIndenter(i)
-  local lib = IndentationLib
-  local str = ""
-  for line in io.lines("test.lua") do
-   str = str .. line .. "\n"
-  end
-
-  local colorTable = lib.defaultColorTable
-  print(lib.indentCode(str, 4, colorTable, i))
-end
-
-
-testIndenter()
-
---]]

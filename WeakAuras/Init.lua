@@ -26,7 +26,8 @@ intendedWoWProject = WOW_PROJECT_CLASSIC
 WeakAuras.versionString = versionStringFromToc
 WeakAuras.buildTime = buildTime
 WeakAuras.printPrefix = "|cff9900ffWeakAuras:|r "
-WeakAuras.newFeatureString = "|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0|t"
+WeakAuras.newFeatureString =
+  "|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0|t"
 WeakAuras.BuildInfo = select(4, GetBuildInfo())
 
 function WeakAuras.IsClassic()
@@ -42,25 +43,28 @@ WeakAuras.prettyPrint = function(msg)
 end
 
 WeakAuras.versionMismatchPrint = function()
-  WeakAuras.prettyPrint("You need to restart your game client to complete the WeakAuras update!")
+  WeakAuras.prettyPrint(
+    "You need to restart your game client to complete the WeakAuras update!"
+  )
 end
 
-WeakAuras.wrongTargetMessage = "This version of WeakAuras was packaged for World of Warcraft " ..
-                              (intendedWoWProject == WOW_PROJECT_MAINLINE and "Retail" or "Classic") ..
-                              ". Please install the " .. (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and "Retail" or "Classic") ..
-                              " version instead.\nIf you are using the Twitch Client, then " ..
-                              " please contact the twitch support for further assistance."
+WeakAuras.wrongTargetMessage =
+  "This version of WeakAuras was packaged for World of Warcraft " .. (intendedWoWProject == WOW_PROJECT_MAINLINE and "Retail" or "Classic") .. ". Please install the " .. (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and "Retail" or "Classic") .. " version instead.\nIf you are using the Twitch Client, then " .. " please contact the twitch support for further assistance."
 
 if not WeakAuras.IsCorrectVersion() then
-  C_Timer.After(1, function() WeakAuras.prettyPrint(WeakAuras.wrongTargetMessage) end)
+  C_Timer.After(1, function()
+    WeakAuras.prettyPrint(WeakAuras.wrongTargetMessage)
+  end)
 end
 
 if versionString ~= versionStringFromToc and versionStringFromToc ~= "Dev" then
   C_Timer.After(1, WeakAuras.versionMismatchPrint)
 end
 
-WeakAuras.PowerAurasPath = "Interface\\Addons\\WeakAuras\\PowerAurasMedia\\Auras\\"
-WeakAuras.PowerAurasSoundPath = "Interface\\Addons\\WeakAuras\\PowerAurasMedia\\Sounds\\"
+WeakAuras.PowerAurasPath =
+  "Interface\\Addons\\WeakAuras\\PowerAurasMedia\\Auras\\"
+WeakAuras.PowerAurasSoundPath =
+  "Interface\\Addons\\WeakAuras\\PowerAurasMedia\\Sounds\\"
 
 -- force enable WeakAurasCompanion because some addon managers interfere with it
 EnableAddOn("WeakAurasCompanion")

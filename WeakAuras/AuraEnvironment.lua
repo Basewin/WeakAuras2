@@ -14,7 +14,7 @@ local UnitAura = UnitAura
 -- Unit Aura functions that return info about the first Aura matching the spellName or spellID given on the unit.
 local WA_GetUnitAura = function(unit, spell, filter)
   if filter and not filter:upper():find("FUL") then
-      filter = filter.."|HELPFUL"
+    filter = filter .. "|HELPFUL"
   end
   for i = 1, 255 do
     local name, _, _, _, _, _, _, _, _, spellId = UnitAura(unit, i, filter)
@@ -28,12 +28,28 @@ end
 if WeakAuras.IsClassic() then
   local WA_GetUnitAuraBase = WA_GetUnitAura
   WA_GetUnitAura = function(unit, spell, filter)
-    local name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod = WA_GetUnitAuraBase(unit, spell, filter)
+    local name,
+      icon,
+      count,
+      debuffType,
+      duration,
+      expirationTime,
+      source,
+      isStealable,
+      nameplateShowPersonal,
+      spellId,
+      canApplyAura,
+      isBossDebuff,
+      castByPlayer,
+      nameplateShowAll,
+      timeMod
+    = WA_GetUnitAuraBase(unit, spell, filter)
     if spellId then
-      local durationNew, expirationTimeNew = LCD:GetAuraDurationByUnit(unit, spellId, source, name)
+      local durationNew, expirationTimeNew =
+        LCD:GetAuraDurationByUnit(unit, spellId, source, name)
       if duration == 0 and durationNew then
-          duration = durationNew
-          expirationTime = expirationTimeNew
+        duration = durationNew
+        expirationTime = expirationTimeNew
       end
     end
     return name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod
@@ -41,24 +57,25 @@ if WeakAuras.IsClassic() then
 end
 
 local WA_GetUnitBuff = function(unit, spell, filter)
-  filter = filter and filter.."|HELPFUL" or "HELPFUL"
+  filter = filter and filter .. "|HELPFUL" or "HELPFUL"
   return WA_GetUnitAura(unit, spell, filter)
 end
 
 local WA_GetUnitDebuff = function(unit, spell, filter)
-  filter = filter and filter.."|HARMFUL" or "HARMFUL"
+  filter = filter and filter .. "|HARMFUL" or "HARMFUL"
   return WA_GetUnitAura(unit, spell, filter)
 end
 
 -- Function to assist iterating group members whether in a party or raid.
 local WA_IterateGroupMembers = function(reversed, forceParty)
-  local unit = (not forceParty and IsInRaid()) and 'raid' or 'party'
-  local numGroupMembers = unit == 'party' and GetNumSubgroupMembers() or GetNumGroupMembers()
-  local i = reversed and numGroupMembers or (unit == 'party' and 0 or 1)
+  local unit = (not forceParty and IsInRaid()) and "raid" or "party"
+  local numGroupMembers =
+    unit == "party" and GetNumSubgroupMembers() or GetNumGroupMembers()
+  local i = reversed and numGroupMembers or (unit == "party" and 0 or 1)
   return function()
     local ret
-    if i == 0 and unit == 'party' then
-      ret = 'player'
+    if i == 0 and unit == "party" then
+      ret = "player"
     elseif i <= numGroupMembers and i > 0 then
       ret = unit .. i
     end
@@ -78,9 +95,9 @@ local WA_ClassColorName = function(unit)
       local classData = RAID_CLASS_COLORS[class]
       local coloredName = ("|c%s%s|r"):format(classData.colorStr, name)
       return coloredName
-    end
+    end -- ¯\_(ツ)_/¯
   else
-    return "" -- ¯\_(ツ)_/¯
+    return ""
   end
 end
 
@@ -89,7 +106,7 @@ local helperFunctions = {
   WA_GetUnitBuff = WA_GetUnitBuff,
   WA_GetUnitDebuff = WA_GetUnitDebuff,
   WA_IterateGroupMembers = WA_IterateGroupMembers,
-  WA_ClassColorName = WA_ClassColorName,
+  WA_ClassColorName = WA_ClassColorName
 }
 
 local LCG = LibStub("LibCustomGlow-1.0")
@@ -100,7 +117,9 @@ local LGF = LibStub("LibGetFrame-1.0")
 WeakAuras.GetUnitFrame = LGF.GetUnitFrame
 
 local function forbidden()
-  prettyPrint(L["A WeakAura just tried to use a forbidden function but has been blocked from doing so. Please check your auras!"])
+  prettyPrint(
+    L["A WeakAura just tried to use a forbidden function but has been blocked from doing so. Please check your auras!"]
+  )
 end
 
 local blockedFunctions = {
@@ -130,12 +149,12 @@ local blockedFunctions = {
   SetBindingMacro = true,
   GuildDisband = true,
   GuildUninvite = true,
-  securecall = true,
+  securecall = true
 }
 
 local overrideFunctions = {
   ActionButton_ShowOverlayGlow = WeakAuras.ShowOverlayGlow,
-  ActionButton_HideOverlayGlow = WeakAuras.HideOverlayGlow,
+  ActionButton_HideOverlayGlow = WeakAuras.HideOverlayGlow
 }
 
 local aura_environments = {}
@@ -151,15 +170,18 @@ function WeakAuras.DeleteAuraEnvironment(id)
 end
 
 function WeakAuras.RenameAuraEnvironment(oldid, newid)
-  aura_environments[oldid], aura_environments[newid] = nil, aura_environments[oldid]
-  environment_initialized[oldid], environment_initialized[newid] = nil, environment_initialized[oldid]
+  aura_environments[oldid], aura_environments[newid] =
+    nil,
+    aura_environments[oldid]
+  environment_initialized[oldid], environment_initialized[newid] =
+    nil,
+    environment_initialized[oldid]
 end
 
 local current_aura_env = nil
 local aura_env_stack = {} -- Stack of of aura environments, allows use of recursive aura activations through calls to WeakAuras.ScanEvents().
-
 function WeakAuras.ClearAuraEnvironment(id)
-  environment_initialized[id] = false;
+  environment_initialized[id] = false
 end
 
 function WeakAuras.ActivateAuraEnvironment(id, cloneId, state, states)
@@ -169,19 +191,21 @@ function WeakAuras.ActivateAuraEnvironment(id, cloneId, state, states)
     -- Pop the last aura_env from the stack, and update current_aura_env appropriately.
     tremove(aura_env_stack)
     current_aura_env = aura_env_stack[#aura_env_stack] or nil
+    -- Point the current environment to the correct table
+    -- Push the new environment onto the stack
+    -- Either this aura environment has not yet been initialized, or it was reset via an edit in WeakaurasOptions
+    -- push new environment onto the stack
+    -- Finally, un the init function if supplied
   else
     if environment_initialized[id] then
-      -- Point the current environment to the correct table
       current_aura_env = aura_environments[id]
       current_aura_env.id = id
       current_aura_env.cloneId = cloneId
       current_aura_env.state = state
       current_aura_env.states = states
       current_aura_env.region = WeakAuras.GetRegion(id, cloneId)
-      -- Push the new environment onto the stack
       tinsert(aura_env_stack, current_aura_env)
     else
-      -- Either this aura environment has not yet been initialized, or it was reset via an edit in WeakaurasOptions
       environment_initialized[id] = true
       aura_environments[id] = {}
       current_aura_env = aura_environments[id]
@@ -190,7 +214,6 @@ function WeakAuras.ActivateAuraEnvironment(id, cloneId, state, states)
       current_aura_env.state = state
       current_aura_env.states = states
       current_aura_env.region = region
-      -- push new environment onto the stack
       tinsert(aura_env_stack, current_aura_env)
 
       if data.controlledChildren then
@@ -208,9 +231,8 @@ function WeakAuras.ActivateAuraEnvironment(id, cloneId, state, states)
       else
         current_aura_env.config = CopyTable(data.config)
       end
-      -- Finally, un the init function if supplied
       local actions = data.actions.init
-      if(actions and actions.do_custom and actions.custom) then
+      if (actions and actions.do_custom and actions.custom) then
         local func = WeakAuras.customActionsFunctions[id]["init"]
         if func then
           xpcall(func, geterrorhandler())
@@ -221,8 +243,9 @@ function WeakAuras.ActivateAuraEnvironment(id, cloneId, state, states)
 end
 
 local env_getglobal
-local exec_env = setmetatable({}, { __index =
-  function(t, k)
+local exec_env = setmetatable(
+  {},
+  { __index = function(t, k)
     if k == "_G" then
       return t
     elseif k == "getglobal" then
@@ -238,8 +261,8 @@ local exec_env = setmetatable({}, { __index =
     else
       return _G[k]
     end
-  end
-})
+  end }
+)
 
 function env_getglobal(k)
   return exec_env[k]
@@ -250,7 +273,10 @@ function WeakAuras.LoadFunction(string, id, inTrigger)
   if function_cache[string] then
     return function_cache[string]
   else
-    local loadedFunction, errorString = loadstring("--[==[ Error in '" .. (id or "Unknown") .. (inTrigger and ("':'".. inTrigger) or "") .."' ]==] " .. string)
+    local loadedFunction, errorString =
+      loadstring(
+        "--[==[ Error in '" .. (id or "Unknown") .. (inTrigger and ("':'" .. inTrigger) or "") .. "' ]==] " .. string
+      )
     if errorString then
       print(errorString)
     else

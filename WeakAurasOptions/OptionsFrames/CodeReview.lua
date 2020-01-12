@@ -51,66 +51,67 @@ local colorScheme = {
   ["or"] = logicColor,
   ["not"] = logicColor,
   -- misc
-  [0] = "|r",
+  [0] = "|r"
 }
 
 local function ConstructCodeReview(frame)
-  local group = AceGUI:Create("InlineGroup");
-  group.frame:SetParent(frame);
-  group.frame:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -17, 30);
-  group.frame:SetPoint("TOPLEFT", frame, "TOPLEFT", 17, -10);
-  group.frame:Hide();
-  group:SetLayout("flow");
+  local group = AceGUI:Create("InlineGroup")
+  group.frame:SetParent(frame)
+  group.frame:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -17, 30)
+  group.frame:SetPoint("TOPLEFT", frame, "TOPLEFT", 17, -10)
+  group.frame:Hide()
+  group:SetLayout("flow")
 
-  local codeTree = AceGUI:Create("TreeGroup");
-  group.codeTree = codeTree;
-  group:SetLayout("fill");
-  group:AddChild(codeTree);
+  local codeTree = AceGUI:Create("TreeGroup")
+  group.codeTree = codeTree
+  group:SetLayout("fill")
+  group:AddChild(codeTree)
 
-  local codebox = AceGUI:Create("MultiLineEditBox");
-  codebox.frame:SetAllPoints(codeTree.content);
-  codebox.frame:SetFrameStrata("FULLSCREEN");
-  codebox:SetLabel("");
-  group:AddChild(codebox);
+  local codebox = AceGUI:Create("MultiLineEditBox")
+  codebox.frame:SetAllPoints(codeTree.content)
+  codebox.frame:SetFrameStrata("FULLSCREEN")
+  codebox:SetLabel("")
+  group:AddChild(codebox)
 
-  codebox.button:Hide();
-  IndentationLib.enable(codebox.editBox, colorScheme, 4);
-  local fontPath = SharedMedia:Fetch("font", "Fira Mono Medium");
-  if(fontPath) then
-    codebox.editBox:SetFont(fontPath, 12);
+  codebox.button:Hide()
+  IndentationLib.enable(codebox.editBox, colorScheme, 4)
+  local fontPath = SharedMedia:Fetch("font", "Fira Mono Medium")
+  if fontPath then
+    codebox.editBox:SetFont(fontPath, 12)
   end
-  group.codebox = codebox;
+  group.codebox = codebox
 
   codeTree:SetCallback("OnGroupSelected", function(self, event, value)
     for _, v in pairs(group.data) do
       if (v.value == value) then
-        codebox:SetText(v.code);
+        codebox:SetText(v.code)
       end
     end
-  end);
+  end)
 
-  local cancel = CreateFrame("Button", nil, group.frame, "UIPanelButtonTemplate");
-  cancel:SetScript("OnClick", function() group:Close() end);
-  cancel:SetPoint("bottomright", frame, "bottomright", -27, 11);
-  cancel:SetHeight(20);
-  cancel:SetWidth(100);
-  cancel:SetText(L["Okay"]);
+  local cancel =
+    CreateFrame("Button", nil, group.frame, "UIPanelButtonTemplate")
+  cancel:SetScript("OnClick", function()
+    group:Close()
+  end)
+  cancel:SetPoint("bottomright", frame, "bottomright", -27, 11)
+  cancel:SetHeight(20)
+  cancel:SetWidth(100)
+  cancel:SetText(L["Okay"])
 
   function group.Open(self, data)
-    if frame.window == "codereview" then
-      return
-    end
+    if frame.window == "codereview" then return end
 
-    self.data = data;
-    self.codeTree:SetTree(data);
+    self.data = data
+    self.codeTree:SetTree(data)
 
-    WeakAuras.ShowOptions();
-    frame.window = "codereview";
+    WeakAuras.ShowOptions()
+    frame.window = "codereview"
     frame:UpdateFrameVisible()
   end
 
   function group.Close()
-    frame.window = "default";
+    frame.window = "default"
     frame:UpdateFrameVisible()
   end
 

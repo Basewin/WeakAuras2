@@ -5,7 +5,7 @@ local L = WeakAuras.L
 
 local function createOptions(id, data)
   local hiddenIconExtra = function()
-    return WeakAuras.IsCollapsed("icon", "icon", "iconextra", true);
+    return WeakAuras.IsCollapsed("icon", "icon", "iconextra", true)
   end
   local indentWidth = 0.15
 
@@ -24,44 +24,56 @@ local function createOptions(id, data)
       width = WeakAuras.normalWidth,
       name = L["Automatic Icon"],
       order = 2,
-      disabled = function() return not WeakAuras.CanHaveAuto(data); end,
-      get = function() return WeakAuras.CanHaveAuto(data) and data.auto; end
+      disabled = function()
+        return not WeakAuras.CanHaveAuto(data)
+      end,
+      get = function()
+        return WeakAuras.CanHaveAuto(data) and data.auto
+      end
     },
     displayIcon = {
       type = "input",
       width = WeakAuras.normalWidth,
       name = L["Display Icon"],
-      hidden = function() return WeakAuras.CanHaveAuto(data) and data.auto; end,
+      hidden = function()
+        return WeakAuras.CanHaveAuto(data) and data.auto
+      end,
       order = 3,
       get = function()
-        return data.displayIcon and tostring(data.displayIcon) or "";
+        return data.displayIcon and tostring(data.displayIcon) or ""
       end,
       set = function(info, v)
-        data.displayIcon = v;
-        WeakAuras.Add(data);
-        WeakAuras.UpdateThumbnail(data);
-        WeakAuras.SetIconNames(data);
+        data.displayIcon = v
+        WeakAuras.Add(data)
+        WeakAuras.UpdateThumbnail(data)
+        WeakAuras.SetIconNames(data)
       end
     },
     chooseIcon = {
       type = "execute",
       width = WeakAuras.normalWidth,
       name = L["Choose"],
-      hidden = function() return WeakAuras.CanHaveAuto(data) and data.auto; end,
+      hidden = function()
+        return WeakAuras.CanHaveAuto(data) and data.auto
+      end,
       order = 4,
-      func = function() WeakAuras.OpenIconPicker(data, "displayIcon"); end
+      func = function()
+        WeakAuras.OpenIconPicker(data, "displayIcon")
+      end
     },
     desaturate = {
       type = "toggle",
       width = WeakAuras.normalWidth,
       name = L["Desaturate"],
-      order = 5,
+      order = 5
     },
     useTooltip = {
       type = "toggle",
       width = WeakAuras.normalWidth,
       name = L["Tooltip on Mouseover"],
-      hidden = function() return not WeakAuras.CanHaveTooltip(data) end,
+      hidden = function()
+        return not WeakAuras.CanHaveTooltip(data)
+      end,
       order = 6
     },
     iconExtraDescription = {
@@ -70,15 +82,15 @@ local function createOptions(id, data)
         local line = L["|cFFffcc00Extra Options:|r"]
         local changed = false
         if data.alpha ~= 1 then
-          line = L["%s Alpha: %d%%"]:format(line, data.alpha*100)
+          line = L["%s Alpha: %d%%"]:format(line, data.alpha * 100)
           changed = true
         end
         if data.zoom ~= 0 then
-          line = L["%s Zoom: %d%%"]:format(line, data.zoom*100)
+          line = L["%s Zoom: %d%%"]:format(line, data.zoom * 100)
           changed = true
         end
         if data.iconInset and data.iconInset ~= 0 then
-          line = L["%s Inset: %d%%"]:format(line, data.iconInset*100)
+          line = L["%s Inset: %d%%"]:format(line, data.iconInset * 100)
           changed = true
         end
         if data.keepAspectRatio then
@@ -86,7 +98,8 @@ local function createOptions(id, data)
           changed = true
         end
         if not changed then
-          line = L["%s Default Alpha, Zoom, Icon Inset, Aspect Ratio"]:format(line)
+          line =
+            L["%s Default Alpha, Zoom, Icon Inset, Aspect Ratio"]:format(line)
         end
         return line
       end,
@@ -97,20 +110,23 @@ local function createOptions(id, data)
     iconExtraExpand = {
       type = "execute",
       name = function()
-        local collapsed = WeakAuras.IsCollapsed("icon", "icon", "iconextra", true)
+        local collapsed =
+          WeakAuras.IsCollapsed("icon", "icon", "iconextra", true)
         return collapsed and L["Show Extra Options"] or L["Hide Extra Options"]
       end,
       order = 7.01,
       width = 0.15,
       image = function()
-        local collapsed = WeakAuras.IsCollapsed("icon", "icon", "iconextra", true);
+        local collapsed =
+          WeakAuras.IsCollapsed("icon", "icon", "iconextra", true)
         return collapsed and "Interface\\AddOns\\WeakAuras\\Media\\Textures\\edit" or "Interface\\AddOns\\WeakAuras\\Media\\Textures\\editdown"
       end,
       imageWidth = 24,
       imageHeight = 24,
       func = function()
-        local collapsed = WeakAuras.IsCollapsed("icon", "icon", "iconextra", true);
-        WeakAuras.SetCollapsed("icon", "icon", "iconextra", not collapsed);
+        local collapsed =
+          WeakAuras.IsCollapsed("icon", "icon", "iconextra", true)
+        WeakAuras.SetCollapsed("icon", "icon", "iconextra", not collapsed)
       end,
       control = "WeakAurasIcon"
     },
@@ -119,7 +135,7 @@ local function createOptions(id, data)
       name = "",
       width = indentWidth,
       order = 7.02,
-      hidden = hiddenIconExtra,
+      hidden = hiddenIconExtra
     },
     alpha = {
       type = "range",
@@ -130,7 +146,7 @@ local function createOptions(id, data)
       max = 1,
       bigStep = 0.01,
       isPercent = true,
-      hidden = hiddenIconExtra,
+      hidden = hiddenIconExtra
     },
     zoom = {
       type = "range",
@@ -141,14 +157,14 @@ local function createOptions(id, data)
       max = 1,
       bigStep = 0.01,
       isPercent = true,
-      hidden = hiddenIconExtra,
+      hidden = hiddenIconExtra
     },
     iconExtra_space2 = {
       type = "description",
       name = "",
       width = indentWidth,
       order = 7.05,
-      hidden = hiddenIconExtra,
+      hidden = hiddenIconExtra
     },
     iconInset = {
       type = "range",
@@ -160,7 +176,7 @@ local function createOptions(id, data)
       bigStep = 0.01,
       isPercent = true,
       hidden = function()
-        return not Masque or hiddenIconExtra();
+        return not Masque or hiddenIconExtra()
       end
     },
     keepAspectRatio = {
@@ -168,159 +184,179 @@ local function createOptions(id, data)
       width = WeakAuras.normalWidth,
       name = L["Keep Aspect Ratio"],
       order = 7.07,
-      hidden = hiddenIconExtra,
+      hidden = hiddenIconExtra
     },
     cooldownHeader = {
       type = "header",
       order = 11,
-      name = L["Cooldown Settings"],
+      name = L["Cooldown Settings"]
     },
     cooldown = {
       type = "toggle",
       width = WeakAuras.normalWidth,
       name = L["Show Cooldown"],
       order = 11.1,
-      disabled = function() return not WeakAuras.CanHaveDuration(data); end,
-      get = function() return WeakAuras.CanHaveDuration(data) and data.cooldown; end
+      disabled = function()
+        return not WeakAuras.CanHaveDuration(data)
+      end,
+      get = function()
+        return WeakAuras.CanHaveDuration(data) and data.cooldown
+      end
     },
     inverse = {
       type = "toggle",
       width = WeakAuras.normalWidth,
       name = L["Inverse"],
       order = 11.2,
-      disabled = function() return not (WeakAuras.CanHaveDuration(data) and data.cooldown); end,
-      get = function() return data.inverse and WeakAuras.CanHaveDuration(data) and data.cooldown; end,
-      hidden = function() return not data.cooldown end
+      disabled = function()
+        return not (WeakAuras.CanHaveDuration(data) and data.cooldown)
+      end,
+      get = function()
+        return data.inverse and WeakAuras.CanHaveDuration(
+          data
+        ) and data.cooldown
+      end,
+      hidden = function()
+        return not data.cooldown
+      end
     },
     cooldownSwipe = {
       type = "toggle",
       width = WeakAuras.normalWidth,
       name = L["Cooldown Swipe"],
       order = 11.3,
-      disabled = function() return not WeakAuras.CanHaveDuration(data) end,
-      hidden = function() return not data.cooldown end,
+      disabled = function()
+        return not WeakAuras.CanHaveDuration(data)
+      end,
+      hidden = function()
+        return not data.cooldown
+      end
     },
     cooldownEdge = {
       type = "toggle",
       width = WeakAuras.normalWidth,
       name = L["Cooldown Edge"],
       order = 11.4,
-      disabled = function() return not WeakAuras.CanHaveDuration(data) end,
-      hidden = function() return not data.cooldown end,
+      disabled = function()
+        return not WeakAuras.CanHaveDuration(data)
+      end,
+      hidden = function()
+        return not data.cooldown
+      end
     },
     cooldownTextDisabled = {
       type = "toggle",
       width = WeakAuras.normalWidth,
       name = L["Hide Cooldown Text"],
       order = 11.5,
-      disabled = function() return not WeakAuras.CanHaveDuration(data); end,
-      hidden = function() return not data.cooldown end,
+      disabled = function()
+        return not WeakAuras.CanHaveDuration(data)
+      end,
+      hidden = function()
+        return not data.cooldown
+      end
     },
     endHeader = {
       type = "header",
       order = 100,
-      name = "",
-    },
-  };
+      name = ""
+    }
+  }
 
   return {
     icon = options,
-    position = WeakAuras.PositionOptions(id, data),
-  };
+    position = WeakAuras.PositionOptions(id, data)
+  }
 end
 
 local function createThumbnail()
   local frame = CreateFrame("FRAME", nil, UIParent)
-  local icon = frame:CreateTexture();
-  icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark");
+  local icon = frame:CreateTexture()
+  icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark")
   icon:SetAllPoints(frame)
   frame.icon = icon
-  return frame;
+  return frame
 end
 
 local function modifyThumbnail(parent, frame, data)
-  local texWidth = 0.25 * data.zoom;
-  frame.icon:SetTexCoord(texWidth, 1 - texWidth, texWidth, 1 - texWidth);
+  local texWidth = 0.25 * data.zoom
+  frame.icon:SetTexCoord(texWidth, 1 - texWidth, texWidth, 1 - texWidth)
   frame:SetParent(parent)
 
   function frame:SetIcon(path)
-    local success = self.icon:SetTexture(data.auto and path or data.displayIcon) and (data.auto and path or data.displayIcon);
-    if not(success) then
-      self.icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark");
+    local success =
+      self.icon:SetTexture(
+        data.auto and path or data.displayIcon
+      ) and (data.auto and path or data.displayIcon)
+    if not success then
+      self.icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark")
     end
   end
 
   if data then
-    local name, icon = WeakAuras.GetNameAndIcon(data);
+    local name, icon = WeakAuras.GetNameAndIcon(data)
     frame:SetIcon(icon)
   end
 end
 
-local templates = {
-  {
-    title = L["Default"],
-    icon = "Interface\\ICONS\\Temp.blp",
-    data = {
-      cooldown = true,
-      inverse = true,
-    };
-  },
-  {
-    title = L["Tiny Icon"],
-    description = L["A 20x20 pixels icon"],
-    icon = "Interface\\ICONS\\Temp.blp",
-    data = {
-      width = 20,
-      height = 20,
-      cooldown = true,
-      inverse = true,
-    };
-  },
-  {
-    title = L["Small Icon"],
-    description = L["A 32x32 pixels icon"],
-    icon = "Interface\\ICONS\\Temp.blp",
-    data = {
-      width = 32,
-      height = 32,
-      cooldown = true,
-      inverse = true,
-    };
-  },
-  {
-    title = L["Medium Icon"],
-    description = L["A 40x40 pixels icon"],
-    icon = "Interface\\ICONS\\Temp.blp",
-    data = {
-      width = 40,
-      height = 40,
-      cooldown = true,
-      inverse = true,
-    };
-  },
-  {
-    title = L["Big Icon"],
-    description = L["A 48x48 pixels icon"],
-    icon = "Interface\\ICONS\\Temp.blp",
-    data = {
-      width = 48,
-      height = 48,
-      cooldown = true,
-      inverse = true,
-    };
-  },
-  {
-    title = L["Huge Icon"],
-    description = L["A 64x64 pixels icon"],
-    icon = "Interface\\ICONS\\Temp.blp",
-    data = {
-      width = 64,
-      height = 64,
-      cooldown = true,
-      inverse = true,
-    };
+local templates = { {
+  title = L["Default"],
+  icon = "Interface\\ICONS\\Temp.blp",
+  data = {
+    cooldown = true,
+    inverse = true
   }
-}
+}, {
+  title = L["Tiny Icon"],
+  description = L["A 20x20 pixels icon"],
+  icon = "Interface\\ICONS\\Temp.blp",
+  data = {
+    width = 20,
+    height = 20,
+    cooldown = true,
+    inverse = true
+  }
+}, {
+  title = L["Small Icon"],
+  description = L["A 32x32 pixels icon"],
+  icon = "Interface\\ICONS\\Temp.blp",
+  data = {
+    width = 32,
+    height = 32,
+    cooldown = true,
+    inverse = true
+  }
+}, {
+  title = L["Medium Icon"],
+  description = L["A 40x40 pixels icon"],
+  icon = "Interface\\ICONS\\Temp.blp",
+  data = {
+    width = 40,
+    height = 40,
+    cooldown = true,
+    inverse = true
+  }
+}, {
+  title = L["Big Icon"],
+  description = L["A 48x48 pixels icon"],
+  icon = "Interface\\ICONS\\Temp.blp",
+  data = {
+    width = 48,
+    height = 48,
+    cooldown = true,
+    inverse = true
+  }
+}, {
+  title = L["Huge Icon"],
+  description = L["A 64x64 pixels icon"],
+  icon = "Interface\\ICONS\\Temp.blp",
+  data = {
+    width = 64,
+    height = 64,
+    cooldown = true,
+    inverse = true
+  }
+} }
 
 local anchorPoints = {
   BOTTOMLEFT = {
@@ -430,7 +466,17 @@ local anchorPoints = {
 }
 
 local function GetAnchors(data)
-  return anchorPoints;
+  return anchorPoints
 end
 
-WeakAuras.RegisterRegionOptions("icon", createOptions, "interface\\icons\\spell_holy_sealofsalvation.blp", L["Icon"], createThumbnail, modifyThumbnail, L["Shows a spell icon with an optional cooldown overlay"], templates, GetAnchors);
+WeakAuras.RegisterRegionOptions(
+  "icon",
+  createOptions,
+  "interface\\icons\\spell_holy_sealofsalvation.blp",
+  L["Icon"],
+  createThumbnail,
+  modifyThumbnail,
+  L["Shows a spell icon with an optional cooldown overlay"],
+  templates,
+  GetAnchors
+)
