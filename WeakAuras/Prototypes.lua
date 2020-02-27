@@ -5622,6 +5622,7 @@ WeakAuras.event_prototypes = {
       local ret = [=[
         unit = string.lower(unit)
         local smart = %s
+        local multiUnit = %s
         local remainingCheck = %s
         local inverseTrigger = %s
 
@@ -5646,6 +5647,7 @@ WeakAuras.event_prototypes = {
       ]=];
 
       return ret:format(trigger.unit == "group" and "true" or "false",
+                        WeakAuras.multiUnitUnits[trigger.unit] and "true" or "false",
                         trigger.use_remaining and tonumber(trigger.remaining or 0) or "nil",
                         trigger.use_inverse and "true" or "false");
     end,
@@ -5664,7 +5666,7 @@ WeakAuras.event_prototypes = {
             return WeakAuras.actual_unit_types_cast
           end
         end,
-        test = "true",
+        test = "multiUnit or UnitIsUnit([[%s]], unit)",
         store = true
       },
       {
