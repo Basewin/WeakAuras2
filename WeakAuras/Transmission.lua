@@ -1931,3 +1931,21 @@ Comm:RegisterComm("WeakAuras", function(prefix, message, distribution, sender)
     });
   end
 end);
+
+local AceGUI = LibStub("AceGUI-3.0")
+
+function WeakAuras.StashShow()
+  local frame = AceGUI:Create("Frame")
+  frame:SetTitle("WeakAuras Import")
+  frame:SetCallback("OnClose", function(widget) AceGUI:Release(widget) end)
+  frame:SetLayout("List")
+  frame:SetWidth(450)
+
+  for _, data in pairs(WeakAurasCompanion.stash) do
+    local button = AceGUI:Create("Button")
+    button:SetText(data.name)
+    button:SetRelativeWidth(1)
+    button:SetCallback("OnClick", function() WeakAuras.Import(data.encoded) end)
+    frame:AddChild(button)
+  end
+end
